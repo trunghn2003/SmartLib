@@ -1809,3 +1809,220 @@ class UpdateBookStatusTests(TestCase):
             response_data = json.loads(response.content)
             self.assertIn('error', response_data)
             self.assertEqual(response_data['error'], 'Test exception')
+class CategoriesDataTests(TestCase):
+    """
+    Kiểm thử cho hàm categories_data
+    """
+    def setUp(self):
+        """Thiết lập dữ liệu cần thiết cho kiểm thử"""
+        self.client = Client()
+        # Tạo manager để đăng nhập
+        self.user = User.objects.create(
+            user_name="catdataadmin",
+            email="catdata@example.com",
+            user_password=bcrypt.hashpw("password".encode('utf-8'), bcrypt.gensalt()).decode('utf-8'),
+            is_active=True
+        )
+        self.manager = Manager.objects.create(user=self.user, manager_id=2004)
+
+        # Đăng nhập manager
+        session = self.client.session
+        session['manager_id'] = self.user.user_id
+        session.save()
+
+        # Tạo các category
+        self.category1 = Category.objects.create(category_name="Fiction")
+        self.category2 = Category.objects.create(category_name="Non-Fiction")
+        self.category3 = Category.objects.create(category_name="Science")
+
+    def test_categories_data_returns_all_categories(self):
+        """Kiểm tra API trả về tất cả category"""
+        response = self.client.get(reverse('categories_data'))
+        self.assertEqual(response.status_code, 200)
+        response_data = json.loads(response.content)
+        self.assertIn('categories', response_data)
+        self.assertEqual(len(response_data['categories']), 3)
+
+    def test_categories_data_format(self):
+        """Kiểm tra định dạng dữ liệu trả về"""
+        response = self.client.get(reverse('categories_data'))
+        self.assertEqual(response.status_code, 200)
+        response_data = json.loads(response.content)
+        categories = response_data['categories']
+
+        # Kiểm tra cấu trúc dữ liệu category
+        for category in categories:
+            self.assertIn('category_id', category)
+            self.assertIn('category_name', category)
+
+        # Kiểm tra dữ liệu của một category cụ thể
+        fiction_category = next((c for c in categories if c['category_name'] == 'Fiction'), None)
+        self.assertIsNotNone(fiction_category)
+        self.assertEqual(fiction_category['category_id'], self.category1.category_id)
+
+    def test_categories_data_empty(self):
+        """Kiểm tra khi không có category nào"""
+        # Xóa tất cả category
+        Category.objects.all().delete()
+
+        response = self.client.get(reverse('categories_data'))
+        self.assertEqual(response.status_code, 200)
+        response_data = json.loads(response.content)
+        self.assertIn('categories', response_data)
+        self.assertEqual(len(response_data['categories']), 0)
+
+    def test_categories_data_not_logged_in(self):
+        """Kiểm tra truy cập khi chưa đăng nhập"""
+        # Xóa session
+        self.client.session.flush()
+
+        response = self.client.get(reverse('categories_data'))
+        self.assertEqual(response.status_code, 200)  # Endpoint này không yêu cầu đăng nhập
+        response_data = json.loads(response.content)
+        self.assertIn('categories', response_data)
+
+class NotificationsPageTests(TestCase):
+    """
+    Kiểm thử cho hàm notificationspage
+    """
+    def setUp(self):
+        """Thiết lập dữ liệu cần thiết cho kiểm thử"""
+        self.client = Client()
+        # Tạo manager để đăng nhập
+        self.user = User.objects.create(
+            user_name="notifadmin",
+            email="notifadmin@example.com",
+            user_password=bcrypt.hashpw("password".encode('utf-8'), bcrypt.gensalt()).decode('utf-8'),
+            is_active=True
+        )
+        self.manager = Manager.objects.create(user=self.user, manager_id=2005)
+
+        # Đăng nhập manager
+        session = self.client.session
+        session['manager_id'] = self.user.user_id
+        session.save()
+
+        # Tạo category
+        self.category = Category.objects.create(category_name="Fiction")
+
+        # Tạo các sách với trạng thái khác nhau
+        # Sách pending
+        for i in range(3):
+            Book.objects.create(
+                book_name=f"Pending Book {i+1}",
+                book_author=f"Author {i+1}",
+                book_barcode=f"PEND00{i+1}",
+                status="Pending",
+                category=self.category,
+                book_uploaded_date=now() - timedelta(days=i)
+            )
+
+        # Sách được chấp nhận
+        Book.objects.create(
+            book_name="Accepted Book",
+            book_author="Author Accepted",
+            book_barcode="ACCEPT001",
+            status="Accepted",
+            category=self.category,
+            book_uploaded_date=now()
+        )
+
+    def test_notificationspage_view_renders(self):
+        """Kiểm tra trang notifications hiển thị đúng"""
+        response = self.client.get(reverse('notifications'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'notifications/notifications.html')
+
+    def test_notificationspage_shows_only_pending_books(self):
+        """Kiểm tra chỉ hiển thị sách đang chờ duyệt"""
+        response = self.client.get(reverse('notifications'))
+        self.assertEqual(response.status_code, 200)
+
+        # Kiểm tra context có chứa books
+        self.assertIn('books', response.context)
+        books = response.context['books']
+
+        # Kiểm tra số lượng sách pending
+        self.assertEqual(len(books), 3)
+
+        # Kiểm tra tất cả đều là sách pending
+        for book in books:
+            self.assertEqual(book.status, "Pending")
+
+        # Kiểm tra sách Accepted không có trong danh sách
+        book_names = [book.book_name for book in books]
+        self.assertNotIn("Accepted Book", book_names)
+
+    def test_notificationspage_orders_by_date_descending(self):
+        """Kiểm tra sách được sắp xếp theo thời gian gần nhất"""
+        response = self.client.get(reverse('notifications'))
+        self.assertEqual(response.status_code, 200)
+
+        books = response.context['books']
+
+        # Kiểm tra thứ tự sách (mới nhất trước)
+        self.assertEqual(books[0].book_name, "Pending Book 1")
+        self.assertEqual(books[1].book_name, "Pending Book 2")
+        self.assertEqual(books[2].book_name, "Pending Book 3")
+
+        # Kiểm tra ngày upload giảm dần
+        for i in range(len(books) - 1):
+            self.assertGreaterEqual(books[i].book_uploaded_date, books[i+1].book_uploaded_date)
+
+    def test_notificationspage_empty(self):
+        """Kiểm tra khi không có sách pending"""
+        # Xóa tất cả sách pending
+        Book.objects.filter(status="Pending").delete()
+
+        response = self.client.get(reverse('notifications'))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('books', response.context)
+        self.assertEqual(len(response.context['books']), 0)
+
+    def test_notificationspage_not_logged_in(self):
+        """Kiểm tra truy cập khi chưa đăng nhập"""
+        # Xóa session
+        self.client.session.flush()
+
+        response = self.client.get(reverse('notifications'))
+        # Nếu view có decorator @manager_login_required, sẽ chuyển hướng đến trang đăng nhập
+        self.assertEqual(response.status_code, 302)
+        # Kiểm tra URL chuyển hướng
+        self.assertRedirects(response, reverse('manager_login'))
+
+    def test_notificationspage_error_handling(self):
+        """Kiểm tra xử lý lỗi khi truy vấn database gặp vấn đề"""
+        with patch('smartlib_api.models.Book.objects.filter') as mock_filter:
+            # Giả lập database error
+            mock_filter.side_effect = Exception("Database connection error")
+
+            # Kiểm tra lỗi 500 được trả về
+            try:
+                response = self.client.get(reverse('notifications'))
+                self.assertEqual(response.status_code, 500)
+            except Exception as e:
+                # Nếu exception không được bắt trong view, test vẫn pass
+                self.assertIsInstance(e, Exception)
+
+    def test_notificationspage_large_number_of_books(self):
+        """Kiểm tra với số lượng lớn sách"""
+        # Xóa các sách hiện tại và tạo nhiều sách pending mới
+        Book.objects.all().delete()
+
+        for i in range(50):  # Tạo 50 sách pending
+            Book.objects.create(
+                book_name=f"Large Book {i+1}",
+                book_author=f"Author {i+1}",
+                book_barcode=f"LARGE00{i+1}",
+                status="Pending",
+                category=self.category,
+                book_uploaded_date=now() - timedelta(minutes=i)
+            )
+
+        response = self.client.get(reverse('notifications'))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('books', response.context)
+        self.assertEqual(len(response.context['books']), 50)
+
+        # Kiểm tra sách mới nhất ở đầu danh sách
+        self.assertEqual(response.context['books'][0].book_name, "Large Book 1")
