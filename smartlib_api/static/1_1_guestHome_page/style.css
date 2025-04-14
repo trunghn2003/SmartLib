@@ -1,0 +1,583 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* body */
+body{
+    background-color: #ffffff;
+    /* display: flex;
+    align-items: flex-start; 
+    justify-content: space-around;
+    flex-direction: column;
+    height: 100vh;
+    margin: 0; */
+}
+/*=============================================================*/
+
+/* header */
+header{
+    background-color: #3f48cc;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+    height: 100px;
+    width: 100%;
+    padding-left: 1.5%;
+    padding-right: 1.5%;
+}
+
+/*-------------------------------------------------------------*/
+/* left-header-container */
+.left-header-container{
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+}
+
+.left-header-container .logo{
+    border-radius: 50%;
+    width: 66px;
+    height: 66px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
+    margin-right: 40px;
+    border: 3px solid transparent;
+    background-color: white;
+    transition: border-color 0.3s ease;
+}
+
+
+
+.left-header-container .Categories {
+    background-color: transparent;
+    color: #ffffff;
+    text-decoration: none;
+    margin-right: 20px;
+    transition: color 0.3s ease;
+}
+
+.left-header-container .Categories:hover,
+.left-header-container .Categories.active { /* Add the active class styling */
+    color: #FFD700;
+}
+
+.left-header-container .dropdown-categories {
+    display: none;
+    position: absolute;
+    height: 200px;
+    width: 130px;
+    top: 64px;
+    left: 106px;
+    background-color: #fff;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    list-style: none;
+    padding-top: 6px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 6px;
+    z-index: 1;
+    max-height: 280px;
+    overflow-y: auto;
+    border-radius: 10px;
+    font-family: 'Arial', sans-serif;
+}
+
+.left-header-container .dropdown-categories li {
+    padding: 8px 15px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    transition: color 0.3s ease;
+}
+
+.left-header-container .dropdown-categories li:hover {
+    background-color: #f0f0f0;
+    color: #007bff;
+}
+
+.left-header-container .dropdown-categories::-webkit-scrollbar {
+    width: 10px;
+}
+
+.left-header-container .dropdown-categories::-webkit-scrollbar-thumb {
+    background-color: #3f48cc;
+    border-radius: 10px;
+}
+
+.left-header-container .dropdown-categories::-webkit-scrollbar-track {
+    background: #b7b7b7;
+}
+
+.left-header-container .search{
+    display: flex;
+    align-items: center;
+    background-color: #f0f5f4;
+    border: 1px solid #d9e6e5;
+    border-radius: 40px;
+    padding: 10px 20px;
+    width: 815px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.left-header-container .search .search-icon{
+    color: #b7bbba;
+    margin-right: 10px;
+    cursor: not-allowed;
+}
+
+.left-header-container .search .search-input{
+    border: none;
+    outline: none;
+    background: none;
+    width: 100%;
+    font-size: 16px;
+    color: #414040;
+}
+
+.left-header-container .search .search-input::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.left-header-container .search .search-input::placeholder {
+    color: #b7bbba;
+    font-size: 16px;
+}
+
+
+/*-------------------------------------------------------------*/
+/* right-header-container */
+.right-header-container{
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: 30px;
+}
+
+.right-header-container button{
+    background-color: #3f48cc;
+    color: #fff;
+    font-size: 15px;
+    padding: 10px 20px;
+    border: 1px solid #ffffff;
+    border-radius: 8px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+}
+
+.right-header-container button:hover{
+    background-color: #4b54d7;
+}
+
+/*=============================================================*/
+
+/* main */
+.main_container{
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    padding-left: 1.5%;
+    padding-right: 1.5%;
+}
+
+/*-------------------------------------------------------------*/
+/* image-container (center)*/
+.main_container .image-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.main_container .image-container img{
+    width: 1400px;
+    height: 350px;
+    transition: opacity 0.5s;
+    margin-top: 60px;
+    margin-bottom: 60px;
+}
+
+/*-------------------------------------------------------------*/
+/* book-lists-container (bottom)*/
+.main_container .book-lists-container hr{
+    border: none;
+    height: 3px;
+    background-color: #ddd;
+    padding-right: 1.5%;
+    margin-top: 50px;
+    margin-bottom: 30px;
+}
+
+/*-------------------------------------------------------------*/
+/* book-item */ 
+.book-item {
+    position: relative;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-left: 30px;
+    width: 250px;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: #ffffff;
+}
+
+.book-item::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 7px;
+    background-color: #3f48cc;
+    transform: scaleX(0);
+    transform-origin: bottom left;
+    transition: transform 0.3s ease;
+}
+
+.book-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.book-item:hover::after {
+    transform: scaleX(1);
+}
+
+.book-cover {
+    width: 200px;
+    height: 352.3px;
+    border-radius: 5px;
+    object-fit: contain;
+    padding-top: 10px;
+    transition: transform 0.3s ease;
+}
+
+.book-details {
+    display: none;
+    text-align: left;
+}
+
+.book-details h3 {
+    text-align: center;
+    font-size: 18px;
+    margin: 10px 0;
+    padding-bottom: 5px;
+    color: #333;
+}
+
+.book-details p {
+    text-align: left;
+    margin: 5px 0;
+    color: #515151;
+}
+
+.book-item:hover .book-details {
+    display: block;
+}
+
+.book-item:hover .book-cover{
+    height: 230px;
+}
+
+/*-------------------------------------------------------------*/
+/* most-readed-book-list-container*/ 
+
+.main_container .book-lists-container .most-readed-book-container .most-readed-book-list-container{
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    position: relative;
+    flex-direction: row;
+    margin-top: 25px;
+    margin-bottom: 25px;
+    padding-top: 15px;
+    padding-bottom: 17px;
+    padding-left: 21px;
+    height: 410px;
+    background-color: #e6e6e63b;
+    border: 1px solid #ccc;
+    border-left: 7px solid #3f48cc;
+}
+
+.main_container .book-lists-container .most-readed-book-container .most-readed-book-list-container a{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    display: block;
+    opacity: 0.8;
+}
+
+.main_container .book-lists-container .most-readed-book-container .most-readed-book-list-container .prev{
+    left: 25px;
+    z-index: 1;
+    transition: opacity 0.2s ease;
+}
+
+.main_container .book-lists-container .most-readed-book-container .most-readed-book-list-container .prev:hover{
+    opacity: 1;
+}
+
+.main_container .book-lists-container .most-readed-book-container .most-readed-book-list-container .next{
+    right: 14px;
+    transition: opacity 0.2s ease;
+}
+
+.main_container .book-lists-container .most-readed-book-container .most-readed-book-list-container .next:hover{
+    opacity: 1;
+}
+
+.main_container .book-lists-container .most-readed-book-container .most-readed-book-list-container a img{
+    width: 40px;
+    height: 40px;
+}
+
+.main_container .book-lists-container .most-readed-book-container .most-readed-book-list-container #prev.hidden, #next.hidden{
+    display: none;
+}
+
+/*-------------------------------------------------------------*/
+/* most-rating-book-container*/ 
+
+.main_container .book-lists-container .most-rating-book-container .most-rating-book-list-container{
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    position: relative;
+    flex-direction: row;
+    margin-top: 25px;
+    margin-bottom: 25px;
+    padding-top: 15px;
+    padding-bottom: 17px;
+    padding-left: 21px;
+    height: 410px;
+    background-color: #e6e6e63b;
+    border: 1px solid #ccc;
+    border-left: 7px solid #3f48cc;
+}
+
+.main_container .book-lists-container .most-rating-book-container .most-rating-book-list-container a{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    display: block;
+    opacity: 0.8;
+}
+
+.main_container .book-lists-container .most-rating-book-container .most-rating-book-list-container .prev{
+    left: 25px;
+    z-index: 1;
+    transition: opacity 0.2s ease;
+}
+
+.main_container .book-lists-container .most-rating-book-container .most-rating-book-list-container .prev:hover{
+    opacity: 1;
+}
+
+.main_container .book-lists-container .most-rating-book-container .most-rating-book-list-container .next{
+    right: 14px;
+    transition: opacity 0.2s ease;
+}
+
+.main_container .book-lists-container .most-rating-book-container .most-rating-book-list-container .next:hover{
+    opacity: 1;
+}
+
+.main_container .book-lists-container .most-rating-book-container .most-rating-book-list-container a img{
+    width: 40px;
+    height: 40px;
+}
+
+.main_container .book-lists-container .most-rating-book-container .most-rating-book-list-container #prev.hidden, #next.hidden{
+    display: none;
+}
+
+/*-------------------------------------------------------------*/
+/* last-updated-book-container*/ 
+
+.main_container .book-lists-container .last-updated-book-container .last-updated-book-list-container{
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    position: relative;
+    flex-direction: row;
+    margin-top: 25px;
+    margin-bottom: 25px;
+    padding-top: 15px;
+    padding-bottom: 19px;
+    padding-left: 21px;
+    height: 410px;
+    background-color: #e6e6e63b;
+    border: 1px solid #ccc;
+    border-left: 7px solid #3f48cc;
+}
+
+.main_container .book-lists-container .last-updated-book-container .last-updated-book-list-container a{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    display: block;
+    opacity: 0.8;
+}
+
+.main_container .book-lists-container .last-updated-book-container .last-updated-book-list-container .prev{
+    left: 25px;
+    z-index: 1;
+    transition: opacity 0.2s ease;
+}
+
+.main_container .book-lists-container .last-updated-book-container .last-updated-book-list-container .prev:hover{
+    opacity: 1;
+}
+
+.main_container .book-lists-container .last-updated-book-container .last-updated-book-list-container .next{
+    right: 14px;
+    transition: opacity 0.2s ease;
+}
+
+.main_container .book-lists-container .last-updated-book-container .last-updated-book-list-container .next:hover{
+    opacity: 1;
+}
+
+.main_container .book-lists-container .last-updated-book-container .last-updated-book-list-container a img{
+    width: 40px;
+    height: 40px;
+}
+
+.main_container .book-lists-container .last-updated-book-container .last-updated-book-list-container #prev.hidden, #next.hidden{
+    display: none;
+}
+
+/*=============================================================*/
+
+/* footer */
+footer{
+    background-color: #222121;
+    color: #fff;
+    padding: 50px 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+footer h3{
+    font-size: 48px;
+    margin-top: 6px;
+}
+
+footer .right{
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 26px;
+}
+
+footer .right .links{
+    display: flex;
+    gap: 30px;
+}
+
+footer .right .links a{
+    color: #989898;
+    transition: color 0.3s ease;
+    text-decoration: none;
+}
+
+footer .right .links a:hover{
+    color: #fff;
+    text-decoration: underline;
+}
+
+footer .right .social{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+footer .right .social i{
+    font-size: 30px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    color: #ffffff;
+}
+
+footer .right .social i:hover{
+    color: #3f48cc;
+}
+
+.x-link svg {
+    fill: white; /* Default color */
+    transition: fill 0.3s ease; /* Smooth color transition */
+}
+
+.x-link:hover svg {
+    fill: #3f48cc; /* Change color on hover */
+}
+
+footer .right p{
+    font-size: 13px;
+    color: #777;
+}
+
+.thebuttons {
+    display: flex;
+    justify-content: flex-end; /* Align buttons to the right */
+    list-style-type: none;
+    padding: 0;
+    padding-right: 50px; 
+}
+
+.thebuttons li {
+    margin-left: 15px; /* Add space between buttons */
+}
+
+.thebuttons a.button {
+    display: inline-block;
+    padding: 10px 20px; /* Add padding inside the button */
+    background-color: #007BFF; /* Button color */
+    color: white; /* Text color */
+    text-decoration: none;
+    border-radius: 5px; /* Rounded corners */
+    font-size: 16px;
+    transition: background-color 0.3s ease; /* Smooth hover effect */
+}
+
+.thebuttons a.button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+.thebuttons {
+    display: flex;
+    justify-content: flex-end; /* Align buttons to the right */
+}
+
+.thebuttons button {
+    background-color: #3f48cc; /* Blue background (#50A9E0) */
+    color: #fff; /* White text */
+    border: none; /* Remove default border */
+    padding: 10px 20px; /* Padding inside buttons */
+    margin-left: 15px; /* Space between buttons */
+    font-size: 16px;
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease; /* Smooth transition on hover */
+}
+
+.thebuttons button:hover {
+    background-color: #535bc8; /* Darker blue on hover */
+}
+
+.continarButtons {
+    float: right;
+   
+}

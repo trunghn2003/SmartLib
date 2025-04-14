@@ -1,0 +1,107 @@
+<!-------------------------------------------------------------------------------------------------------------->
+
+
+
+
+<div id="notifications" style="display: none;">
+    <h2>Notifications</h2>
+    <table class="content-table">
+        <thead>
+            <tr>
+                <th>Name user</th>
+                <th>Upload Book</th>
+                <th>Size</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr id="notification1">
+                <td>Mahmoud</td>
+                <td><a href="#" onclick="showBookDetails('Book', 'Author', 'Fiction', 'Description', '{% static "images/storybook.jpg" %}')">Upload Book</a></td>
+                <td>1.5 MB</td>
+                <td>
+                    <button class="accept-btn" onclick="updateStatus(this, 'Accepted')">Accept</button>
+                    <button class="reject-btn" onclick="updateStatus(this, 'Rejected')">Reject</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+
+<!-------------------------------------------------------------------------------------------------------------->
+
+
+
+<style>
+
+
+.content-table-book {
+border-collapse: collapse;
+margin: 25px 0;
+font-size: 0.9em;
+min-width: 1280px;
+border-radius: 5px 5px 0 0;
+overflow: hidden;
+box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.content-table-book thead tr {
+background-color: #009879;
+color: #ffffff;
+text-align: left;
+font-weight: bold;
+}
+
+.content-table-book th,
+.content-table-book td {
+padding: 12px 15px;
+}
+
+.content-table-book tbody tr {
+border-bottom: 1px solid #dddddd;
+}
+
+.content-table-book tbody tr:nth-of-type(even) {
+background-color: #f3f3f3;
+}
+
+.content-table-book tbody tr:last-of-type {
+border-bottom: 2px solid #009879;
+}
+
+.content-table-book tbody tr.active-row {
+font-weight: bold;
+color: #009879;
+}
+
+.select-btn {
+background-color: #008C45; 
+color: #fff; 
+border: none;
+border-radius: 4px;
+padding: 10px 15px;
+font-size: 16px;
+cursor: pointer;
+transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.select-btn:hover {
+background-color: #008C45;
+box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); 
+}
+
+.select-btn:active {
+background-color: #008C45; 
+box-shadow: inset 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.select-btn:disabled {
+background-color: #cccccc; 
+color: #666666; 
+cursor: not-allowed;
+}
+
+
+

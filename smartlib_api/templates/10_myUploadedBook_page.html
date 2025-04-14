@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+        {% load static %}
+        <link rel="stylesheet" href="{% static '10_myUploadedBook_page/style.css' %}">
+        <link rel="icon" type="image/png" href="{% static 'images/logo.png' %}" sizes="32x32">
+        <title>SmartLib-my_UploadedBook Page</title>
+    </head>
+
+    <body>
+
+        <!-- Header -->
+        <header>
+            <div class="left-header-container" id="left-header-container">
+
+                <a class="logo" id="logo" href="{% url 'homePage' %}"><img src='{% static "images/logo.png" %}' width='60' height='60'></a>
+
+                <a class="Categories" id="Categories" href=''>Categories</a>
+                <ul class="dropdown-categories" id="dropdown-categories"></ul>
+
+                <div class="search">
+                    <i class="fa fa-search search-icon"></i>
+                    <input class="search-input" id="search-input" type="search" placeholder="Search for anything">
+                </div>
+
+            </div>
+
+            <div class="right-header-container" id="right-header-container">
+                
+                <a class="help" id="help" href="{% url 'simulationPage' %}"><img src='{% static "images/help.png" %}' width='60' height='60'></a>
+                <a class="fav_list" id="fav_list" href=''><img id="img_fav_list" src='{% static "images/fav_list.png" %}' width='24' height='25'></a>
+                <div class="fav_list_dropdown" id="fav_list_dropdown">
+                    <h2>WishList</h2>
+                    <div id="empty_wishList">
+                        <br>
+                        <p>Your wishlist is empty.</p>
+                    </div>
+                    <div id="notEmpty_wishList" class="notEmpty_notification">
+                        <div id="wishList-item_1" class="notifi-item">
+                            <img id="wishList-item_image_1" src='{% static "images/book.png" %}' alt="img">
+                            <div class="text">
+                                <h4 id="wishList-item_title_1">Title....</h4>
+                                <p id="wishList-item_author_1">Author: null..</p>
+                                <p id="wishList-item_category_1">Category: null..</p>
+                            </div> 
+                        </div>
+                        <div id="wishList-item_2" class="notifi-item">
+                            <img id="wishList-item_image_2" src='{% static "images/book.png" %}' alt="img">
+                            <div class="text">
+                                <h4 id="wishList-item_title_2">Title....</h4>
+                                <p id="wishList-item_author_2">Author: null..</p>
+                                <p id="wishList-item_category_2">Category: null..</p>
+                            </div> 
+                        </div>
+                        <div id="wishList-item_3" class="notifi-item">
+                            <img id="wishList-item_image_3" src='{% static "images/book.png" %}' alt="img">
+                            <div class="text">
+                                <h4 id="wishList-item_title_3">Title....</h4>
+                                <p id="wishList-item_author_3">Author: null..</p>
+                                <p id="wishList-item_category_3">Category: null..</p>
+                            </div> 
+                        </div>
+                        <div id="viewAll_wishList" class="view-all">
+                            <a href="/wish-listPage">View All WishList</a>
+                        </div>
+                    </div>
+                </div>
+
+                <a class="notification" id="notification" href=''><img id="img_notification" src='{% static "images/empty_notification.png" %}' width='24' height='25'></a>
+                <div class="notification_dropdown" id="notification_dropdown">
+                    <h2>Notification</h2>
+                    <div id="empty_notification">
+                        <br>
+                        <p>No new notifications.</p>
+                    </div>
+                    <div id="notEmpty_notification" class="notEmpty_notification">
+                        <div id="notifi-item_1" class="notifi-item">
+                            <img id="notifi-item_image_1" src='{% static "images/reject.png" %}' alt="img">
+                            <div class="text">
+                                <h4 id="notifi-item_title_1">Title....</h4>
+                                <p id="notifi-item_content_1">Content...</p>
+                            </div> 
+                        </div>
+                        <div id="notifi-item_2" class="notifi-item">
+                            <img id="notifi-item_image_2" src='{% static "images/accept.png" %}' alt="img">
+                            <div class="text">
+                                <h4 id="notifi-item_title_2">Title....</h4>
+                                <p id="notifi-item_content_2">Content...</p>
+                            </div> 
+                        </div>
+                        <div id="notifi-item_3" class="notifi-item">
+                            <img id="notifi-item_image_3" src='{% static "images/point.png" %}' alt="img">
+                            <div class="text">
+                                <h4 id="notifi-item_title_3">Title....</h4>
+                                <p id="notifi-item_content_3">Content...</p>
+                            </div> 
+                        </div>
+                        <div id="viewAll_notification" class="view-all">
+                            <a href="/notificationPage">View All Notifications</a>
+                        </div>
+                    </div>
+                </div>
+
+                <a class="user" id="user" href=''><img id="img_user" src='{% static "images/user.png" %}' width='27' height='25'></a>
+                <ul class="dropdown-user" id="dropdown-user">
+                    <li onclick="handleOptionClick_user('Rank')" class="user-rank">
+                        <p id="user_rank">Rank: Rookie</p>
+                        <img id="img_rank" src="{% static 'images/rookie_rank.png' %}" alt="img" width="25" height="25">
+                    </li>
+                    <hr class="divider">
+                    <li onclick="handleOptionClick_user('User Profile')">User Profile</li>
+                    <li onclick="handleOptionClick_user('My Uploaded Book')">My Uploaded Book</li>
+                    <li onclick="handleOptionClick_user('Wish List')">Wish List</li>
+                    <li onclick="handleOptionClick_user('Notification')">Notification</li>
+                    <li onclick="handleOptionClick_user('Send FeedBack')">Send Feedback</li>
+                    <li onclick="handleOptionClick_user('Log out')" class="logout">Log Out</li>
+                </ul>
+                
+
+                <div class="feedback-stack" id="feedback-stack">
+                    <div class="feedback-content">
+                        <span class="close-btn" id="closeBtn">&times;</span>
+                        <h2>Send Feedback</h2>
+                        <textarea id="feedbackText" placeholder="Write your feedback here..."></textarea>
+                        <button id="sendFeedback">Send</button>
+                    </div>
+                </div>
+
+                <div class="feedback-stack" id="afterfeedback-stack">
+                    <div class="feedback-content">
+                        <span class="close-btn" id="closeBtn2">&times;</span>
+                        <h2>Feedback Sends Successfully</h2>
+                        <p>Thank you for your feedback! We appreciate it and will work on improving. 😊</p>
+                        <br>
+                        <p>note that: you achieved +30 point for added feedback <img src='{% static "images/80z.gif" %}' width="20" height="20"></p>
+                        <br>
+                        <br>
+                        <button id="doneFeedback">Done</button>
+                    </div>
+                </div>
+
+            </div>
+
+        </header>
+
+        <!-- Main -->
+         <main>
+
+            <div class="gamefication_alert" id="gamefication_alert">
+                <img src="{% static 'images/point.png' %}" width='40' height='40'>
+                <p class="game_num">+50</p>
+                <p class="game_des">Upload Books Achievement</p>
+            </div>
+
+            <!-- Top -->
+            <div class="top_main_container" id="top_main_container">
+                <h1>My Uploaded Book</h1>
+                <div class="search-container" id="upload_book">
+                    <img id="upload_book_img" src='{% static "images/add_book.png" %}' width="30" height="30">
+                    <p id="upload_book_text">Upload Book</p>
+                </div>
+            </div>
+
+            <div id="alert-stack" class="alert-stack">
+                <div class="alert-content">
+                    <span class="close-btn-alert" id="closeBtn-alert">&times;</span>
+                    <h2>Delete My Book</h2>
+                    <p>Are you sure you want to delete this book? Once deleted, it cannot be restored from this library.</p>
+                    <div class="alert_buttons">
+                        <button class="alert_cancel" id="alert_cancel">Cancel</button>
+                        <button class="alert_delete" id="alert_delete">Delete</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Center -->
+            <div class="center_main_container" id="center_main_container">
+                <div class="book-list-container" id="book-list-container">
+
+                    <!-- first row-->
+
+                    <!-- Book 1 -->
+                    <div class="book-item" id="book_item_1">
+                        <div id="favorite-btn" class="favorite-btn"> 
+                            <a id="favorite_img" class="favorite_img">
+                                <img id="book_fav_1" class="favorite_img" src='{% static "images/remove.png" %}' alt="favorite">
+                            </a>
+                        </div>
+                        <img id="book_image_1" src='{% static "images/book.png" %}' alt="Book Cover" class="book-cover">
+                        <div class="book-details">
+                            <h3 id="book_name_1">Book test</h3>
+                            <p id="book_author_1">Author: null..</p>
+                            <p id="book_category_1">Category: null..</p>
+                            <p id="book_status_1">Status: null..</p>
+                        </div>
+                    </div>
+
+                    <!-- Book 2 -->
+                    <div class="book-item" id="book_item_2">
+                        <div id="favorite-btn" class="favorite-btn"> 
+                            <a id="favorite_img" class="favorite_img">
+                                <img id="book_fav_2" class="favorite_img" src='{% static "images/remove.png" %}' alt="favorite">
+                            </a>
+                        </div>
+                        <img id="book_image_2" src='{% static "images/book.png" %}' alt="Book Cover" class="book-cover">
+                        <div class="book-details">
+                            <h3 id="book_name_2">Book test</h3>
+                            <p id="book_author_2">Author: null..</p>
+                            <p id="book_category_2">Category: null..</p>
+                            <p id="book_status_2">Status: null..</p>
+                        </div>
+                    </div>
+
+                    <div class="book-item" id="book_item_3">
+                        <div id="favorite-btn" class="favorite-btn">
+                            <a id="favorite_img" class="favorite_img">
+                                <img id="book_fav_3" class="favorite_img" src="{% static 'images/remove.png' %}" alt="favorite">
+                            </a>
+                        </div>
+                        <img id="book_image_3" src="{% static 'images/book.png' %}" alt="Book Cover" class="book-cover">
+                        <div class="book-details">
+                            <h3 id="book_name_3">Book test</h3>
+                            <p id="book_author_3">Author: null..</p>
+                            <p id="book_category_3">Category: null..</p>
+                            <p id="book_status_3">Status: null..</p>
+                        </div>
+                    </div>
+
+                    <div class="book-item" id="book_item_4">
+                        <div id="favorite-btn" class="favorite-btn">
+                            <a id="favorite_img" class="favorite_img">
+                                <img id="book_fav_4" class="favorite_img" src="{% static 'images/remove.png' %}" alt="favorite">
+                            </a>
+                        </div>
+                        <img id="book_image_4" src="{% static 'images/book.png' %}" alt="Book Cover" class="book-cover">
+                        <div class="book-details">
+                            <h3 id="book_name_4">Book test</h3>
+                            <p id="book_author_4">Author: null..</p>
+                            <p id="book_category_4">Category: null..</p>
+                            <p id="book_status_4">Status: null..</p>
+                        </div>
+                    </div>
+
+                    <!-- second row-->
+                    <div class="book-item" id="book_item_5">
+                        <div id="favorite-btn" class="favorite-btn">
+                            <a id="favorite_img" class="favorite_img">
+                                <img id="book_fav_5" class="favorite_img" src="{% static 'images/remove.png' %}" alt="favorite">
+                            </a>
+                        </div>
+                        <img id="book_image_5" src="{% static 'images/book.png' %}" alt="Book Cover" class="book-cover">
+                        <div class="book-details">
+                            <h3 id="book_name_5">Book test</h3>
+                            <p id="book_author_5">Author: null..</p>
+                            <p id="book_category_5">Category: null..</p>
+                            <p id="book_status_5">Status: null..</p>
+                        </div>
+                    </div>
+
+                    <div class="book-item" id="book_item_6">
+                        <div id="favorite-btn" class="favorite-btn">
+                            <a id="favorite_img" class="favorite_img">
+                                <img id="book_fav_6" class="favorite_img" src="{% static 'images/remove.png' %}" alt="favorite">
+                            </a>
+                        </div>
+                        <img id="book_image_6" src="{% static 'images/book.png' %}" alt="Book Cover" class="book-cover">
+                        <div class="book-details">
+                            <h3 id="book_name_6">Book test</h3>
+                            <p id="book_author_6">Author: null..</p>
+                            <p id="book_category_6">Category: null..</p>
+                            <p id="book_status_6">Status: null..</p>
+                        </div>
+                    </div>
+
+                    <div class="book-item" id="book_item_7">
+                        <div id="favorite-btn" class="favorite-btn">
+                            <a id="favorite_img" class="favorite_img">
+                                <img id="book_fav_7" class="favorite_img" src="{% static 'images/remove.png' %}" alt="favorite">
+                            </a>
+                        </div>
+                        <img id="book_image_7" src="{% static 'images/book.png' %}" alt="Book Cover" class="book-cover">
+                        <div class="book-details">
+                            <h3 id="book_name_7">Book test</h3>
+                            <p id="book_author_7">Author: null..</p>
+                            <p id="book_category_7">Category: null..</p>
+                            <p id="book_status_7">Status: null..</p>
+                        </div>
+                    </div>
+
+                    <div class="book-item" id="book_item_8">
+                        <div id="favorite-btn" class="favorite-btn">
+                            <a id="favorite_img" class="favorite_img">
+                                <img id="book_fav_8" class="favorite_img" src="{% static 'images/remove.png' %}" alt="favorite">
+                            </a>
+                        </div>
+                        <img id="book_image_8" src="{% static 'images/book.png' %}" alt="Book Cover" class="book-cover">
+                        <div class="book-details">
+                            <h3 id="book_name_8">Book test</h3>
+                            <p id="book_author_8">Author: null..</p>
+                            <p id="book_category_8">Category: null..</p>
+                            <p id="book_status_8">Status: null..</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="full_button" id="full_button">
+                <a id="prev" href='#'><img src='{% static "images/prev_page_empty.png" %}' width="25px" height="25px"></a>
+                <a id="next" href='#'><img src='{% static "images/next_page_empty.png" %}' width="25px" height="25px"></a>
+            </div>
+
+         </main>
+
+         <!-- Upload Book Modal -->
+        <div id="upload-book-container" style="display: none;">
+            <form id="uploadForm" class="upload-form" method="POST" enctype="multipart/form-data" onsubmit="submitForm(event)">
+                <div class="file-upload" id="fileUpload" onclick="triggerFileInput()">
+                    <p>Click to upload your book file</p>
+                    <input type="file" id="fileInput" name="bookfile" accept=".pdf" onchange="fileSelected(event)" style="display: none;">
+                </div>
+                <p id="fileNameDisplay"></p>
+                <label id="fileSizeLabel" class="max-size">No file selected</label>
+
+                <div class="form-content">
+                    <div class="form-left">
+                        <label for="title">Book Title:</label>
+                        <input type="text" id="title" name="title" placeholder="Book Title" required>
+
+                        <label for="author">Author:</label>
+                        <input type="text" id="author" name="author" placeholder="Author Name" required>
+
+                        <label for="category">Category:</label>
+                        <select id="category" name="category" required>
+                            <option value="" disabled selected>Select Category</option>
+                        </select>
+
+                        <label for="barcode">Barcode:</label>
+                        <input type="text" id="barcode" name="barcode" placeholder="Barcode" required>
+                    </div>
+
+                    <div class="form-right">
+                        <label for="description">Description:</label>
+                        <textarea id="description" name="description" rows="4" placeholder="Add a brief description..." required></textarea>
+                        <div class="input_container">
+                            <label for="imageUpload1">Upload Book Cover:</label>
+                            <div class="image-box" onclick="triggerImageInput('imageUpload1')">
+                                <img id="imagePreview1" style="display: none;" alt="Image Preview">
+                            </div>
+                            <input type="file" id="imageUpload1" name="bookImage" accept=".jpg,.jpeg,.png,.gif" onchange="previewImage(event, 'imagePreview1')" style="display: none;">
+                        </div>
+                    </div>
+                </div>
+                <button id="submitBtn" type="submit">Submit</button>
+                <button type="button" class="cancel-btn" onclick="closeUploadForm()">Cancel</button>
+            </form>
+        </div>
+
+        <!-- Script -->
+        <script src="{% static '10_myUploadedBook_page/script.js' %}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
+
+    </body>
+    <br>
+    <br>
+    <!-- Footer -->
+    <footer>
+        <h3>Discover, Learn & Read Your Favorite Books</h3>
+        <div class="right">
+            <div class="links">
+                <a href="{% url 'privacyPolicyPage' %}" target="_blank">Privacy Policy</a>
+                <a href="{% url 'aboutUsPage' %}" target="_blank">About Us</a>
+                <a href="mailto:smartlib120@gmail.com">Contact Us</a>
+            </div>
+            <div class="social">
+                <a href="https://www.instagram.com/smartlib_120" target="_blank">
+                    <i class='bx bxl-instagram'></i>
+                </a>
+                <a href="https://www.facebook.com/profile.php?id=61572494046162&mibextid=wwXIfr&mibextid=wwXIfr" target="_blank">
+                    <i class='bx bxl-facebook-square'></i>
+                </a>
+                <a href="https://x.com/smartlib120?s=11&t=w0O9NTjE-iKVbvTAKY1iLg" target="_blank" class="x-link">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M17.5 2H21L13.5 10.5L22 22H15.5L10.5 15.5L4.5 22H1.5L9.5 13L1 2H7.5L12 8.5L17.5 2Z"/>
+                    </svg>
+                </a>
+                
+            </div>
+            <p>copyright &copy; 2025 SmartLib. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+
+</html>

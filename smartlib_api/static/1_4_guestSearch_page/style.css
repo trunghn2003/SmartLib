@@ -1,0 +1,558 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* body */
+body{
+    background-color: #ffffff;
+    /* display: flex;
+    align-items: flex-start; 
+    justify-content: space-around;
+    flex-direction: column;
+    height: 100vh;
+    margin: 0; */
+}
+/*=============================================================*/
+
+/* header */
+header{
+    background-color: #3f48cc;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+    height: 100px;
+    width: 100%;
+    padding-left: 1.5%;
+    padding-right: 1.5%;
+}
+
+/*-------------------------------------------------------------*/
+/* left-header-container */
+.left-header-container{
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+}
+
+.left-header-container .logo{
+    border-radius: 50%;
+    width: 66px;
+    height: 66px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
+    margin-right: 40px;
+    border: 3px solid transparent;
+    background-color: white;
+    transition: border-color 0.3s ease;
+}
+
+
+
+.left-header-container .Categories {
+    background-color: transparent;
+    color: #ffffff;
+    text-decoration: none;
+    margin-right: 20px;
+    transition: color 0.3s ease;
+}
+
+.left-header-container .Categories:hover,
+.left-header-container .Categories.active { /* Add the active class styling */
+    color: #FFD700;
+}
+
+.left-header-container .dropdown-categories {
+    display: none;
+    position: absolute;
+    height: 200px;
+    width: 130px;
+    top: 64px;
+    left: 106px;
+    background-color: #fff;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    list-style: none;
+    padding-top: 6px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 6px;
+    z-index: 1;
+    max-height: 280px;
+    overflow-y: auto;
+    border-radius: 10px;
+    font-family: 'Arial', sans-serif;
+}
+
+.left-header-container .dropdown-categories li {
+    padding: 8px 15px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    transition: color 0.3s ease;
+}
+
+.left-header-container .dropdown-categories li:hover {
+    background-color: #f0f0f0;
+    color: #007bff;
+}
+
+.left-header-container .dropdown-categories::-webkit-scrollbar {
+    width: 10px;
+}
+
+.left-header-container .dropdown-categories::-webkit-scrollbar-thumb {
+    background-color: #3f48cc;
+    border-radius: 10px;
+}
+
+.left-header-container .dropdown-categories::-webkit-scrollbar-track {
+    background: #b7b7b7;
+}
+
+.left-header-container .search{
+    display: flex;
+    align-items: center;
+    background-color: #f0f5f4;
+    border: 1px solid #d9e6e5;
+    border-radius: 40px;
+    padding: 10px 20px;
+    width: 815px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.left-header-container .search .search-icon{
+    color: #b7bbba;
+    margin-right: 10px;
+    cursor: not-allowed;
+}
+
+.left-header-container .search .search-input{
+    border: none;
+    outline: none;
+    background: none;
+    width: 100%;
+    font-size: 16px;
+    color: #414040;
+}
+
+.left-header-container .search .search-input::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.left-header-container .search .search-input::placeholder {
+    color: #b7bbba;
+    font-size: 16px;
+}
+
+
+/*-------------------------------------------------------------*/
+/* right-header-container */
+.right-header-container{
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: 30px;
+}
+
+.right-header-container button{
+    background-color: #3f48cc;
+    color: #fff;
+    font-size: 15px;
+    padding: 10px 20px;
+    border: 1px solid #ffffff;
+    border-radius: 8px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+}
+
+.right-header-container button:hover{
+    background-color: #4b54d7;
+}
+
+
+.filtering_section{
+    width: 90%;
+    margin: auto;
+    margin-top: 50px;
+    position: relative;
+    display: flex;
+    gap: 120px;
+}
+
+hr{
+    border: 1px solid #a6a2a2;
+}
+
+.vertical-line {
+    position: absolute;
+    top: 0;
+    left: 30%;
+    width: 1px;
+    height: 100%;
+    transform-origin: top left;
+    border: 1px solid #a6a2a2;
+    background-color: #a6a2a2;
+}
+
+.start{
+    width: 25%;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.start .buttons{
+    display: flex;
+    justify-content: space-between;
+    gap: 22px;
+}
+
+.start .buttons label{
+    font-weight: 600;
+    font-size: 36px;
+    color: rgb(13, 9, 9);
+}
+
+.start .buttons select{
+    width: 200px;
+    padding: 7px;
+    font-size: 18px;
+    border-radius: 5px;
+    border: 2px solid rgb(13, 9, 9);
+}
+
+
+.categories_checkBox{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 15px;
+}
+
+.categories_checkBox label{
+    font-weight: 600;
+    font-size: 24px;
+}
+
+.categories_checkBox .option{
+    display: flex;
+    flex-direction: row;
+}
+
+.categories_checkBox p{
+    font-size: 14px;
+    color: #353535;
+    margin-left: 10px;
+}
+
+
+label{
+    font-weight: 600;
+    font-size: 24px;
+}
+
+.start .rating {
+    display: flex;
+    justify-content: start;
+    align-items: center; 
+    text-align: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.start .rating .star {
+    font-size: 2rem;
+    cursor: pointer;
+    color: #ddd;
+    transition: color 0.5s ease;
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+
+.start .rating .star:hover {
+    color: #FFD700; /* Highlight star on hover */
+}
+
+.start .rating .star.active {
+    color: #FFD700; /* Golden color for selected stars */
+}
+
+.start .rating .star_count .star_num{
+    font-size: 1.2rem;
+    color: #333;
+    padding-top: 6px;
+    padding-left: 10px; /* Provides some space between the stars and the text */
+    display: flex;
+    align-items: center;
+    text-align: center;
+    transition: color 0.5s ease;
+}
+
+
+.start button{
+    padding: 12px 20px;
+    width: 200px;
+    background-color: #3f48cc;
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: 700;
+    border-radius: 10px;
+    cursor: pointer;
+    border: none;
+    margin: 0 auto;
+    transition: background-color 0.3s;
+}
+
+.start button:hover{
+    background-color: #4b54d7;
+}
+    
+.end{
+    width: 70%;
+}
+
+.end .cards{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.cards .card{
+    width: 100%;
+    display: flex;
+    gap: 10px;
+}
+
+.card img{
+    width: 315px;
+    height: 190px;
+    border-radius: 5px;
+    object-fit: contain;
+}
+
+.book-cover {
+    width: 200px;
+    height: 352.3px;
+    border-radius: 5px;
+    object-fit: contain;
+    padding-top: 10px;
+    transition: transform 0.3s ease;
+}
+
+.card .data{
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-self: center;
+}
+
+.card .data a{
+    color: #333;
+    font-size: 20px;
+    text-decoration: none;
+    margin: 15px 0 10px;
+}
+
+.card .data a:hover{
+    color: #333;
+    text-decoration: underline;
+}
+
+.card .title{
+    font-weight: 700;
+    font-size: 20px;
+}
+
+.card .author{
+    color: #646464;
+}
+
+.card .rate{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.card .rate .valuation{
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.stars{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.card .rate .stars svg{
+    fill: gold;
+    width: 20px;
+    height: 20px;
+}
+
+.card .description{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.card .description span{
+    color: #646464;
+}
+
+.card svg{
+    fill: white;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
+.card .changeLiked{
+    fill: red;
+    stroke: none;
+}
+
+.card svg:hover{
+    fill: black;
+}
+
+.full_button{
+    padding-top: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+/*=============================================================*/
+
+/* footer */
+footer{
+    background-color: #222121;
+    color: #fff;
+    padding: 50px 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+footer h3{
+    font-size: 48px;
+    margin-top: 6px;
+}
+
+footer .right{
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 26px;
+}
+
+footer .right .links{
+    display: flex;
+    gap: 30px;
+}
+
+footer .right .links a{
+    color: #989898;
+    transition: color 0.3s ease;
+    text-decoration: none;
+}
+
+footer .right .links a:hover{
+    color: #fff;
+    text-decoration: underline;
+}
+
+footer .right .social{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+footer .right .social i{
+    font-size: 30px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    color: #ffffff;
+}
+
+footer .right .social i:hover{
+    color: #3f48cc;
+}
+
+.x-link svg {
+    fill: white; /* Default color */
+    transition: fill 0.3s ease; /* Smooth color transition */
+}
+
+.x-link:hover svg {
+    fill: #3f48cc; /* Change color on hover */
+}
+
+footer .right p{
+    font-size: 13px;
+    color: #777;
+}
+
+.thebuttons {
+    display: flex;
+    justify-content: flex-end; /* Align buttons to the right */
+    list-style-type: none;
+    padding: 0;
+    padding-right: 50px; 
+}
+
+.thebuttons li {
+    margin-left: 15px; /* Add space between buttons */
+}
+
+.thebuttons a.button {
+    display: inline-block;
+    padding: 10px 20px; /* Add padding inside the button */
+    background-color: #007BFF; /* Button color */
+    color: white; /* Text color */
+    text-decoration: none;
+    border-radius: 5px; /* Rounded corners */
+    font-size: 16px;
+    transition: background-color 0.3s ease; /* Smooth hover effect */
+}
+
+.thebuttons a.button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+.thebuttons {
+    display: flex;
+    justify-content: flex-end; /* Align buttons to the right */
+}
+
+.thebuttons button {
+    background-color: #3f48cc; /* Blue background (#50A9E0) */
+    color: #fff; /* White text */
+    border: none; /* Remove default border */
+    padding: 10px 20px; /* Padding inside buttons */
+    margin-left: 15px; /* Space between buttons */
+    font-size: 16px;
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease; /* Smooth transition on hover */
+}
+
+.thebuttons button:hover {
+    background-color: #535bc8; /* Darker blue on hover */
+}
+
+.continarButtons {
+    float: right;
+   
+}

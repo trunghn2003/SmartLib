@@ -1,0 +1,935 @@
+
+let currentSection = window.location.pathname; 
+
+function showPage(pageId) {
+    const sections = document.querySelectorAll("#content > div");
+
+    sections.forEach(section => {
+        section.style.display = "none"; 
+    });
+
+    const selectedSection = document.getElementById(pageId);
+    if (selectedSection) {
+        selectedSection.style.display = "block"; 
+    }
+
+    if (pageId === 'categories') {
+        history.pushState(null, null, '/adminpanel/categories');
+        currentSection = '/adminpanel/categories'; 
+        loadCategories(); 
+    } else if (pageId === 'feedback') {
+        history.pushState(null, null, '/adminpanel/feedback');
+        currentSection = '/adminpanel/feedback'; 
+        loadFeedback();
+    } else if (pageId === 'userDetails') {
+        history.pushState(null, null, '/adminpanel/user-details');
+        currentSection = '/adminpanel/user-details'; 
+    } else if (pageId === 'books') {
+        history.pushState(null, null, '/adminpanel/books');
+        currentSection = '/adminpanel/books'; 
+    } else if (pageId === 'notifications') {
+        history.pushState(null, null, '/adminpanel/notifications');
+        currentSection = '/adminpanel/notifications';
+    }
+}
+
+
+
+
+function loadCategories() {
+    fetch('/adminpanel/categories-data/', { cache: 'no-store' }) 
+        .then(response => response.json())
+        .then(data => {
+            const categoryList = document.getElementById('categoryList');
+            categoryList.innerHTML = ''; 
+
+            if (data.categories && data.categories.length > 0) {
+                data.categories.forEach(category => {
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `
+                        <input type="checkbox" class="category-select" data-id="${category.category_id}">
+                        ${category.category_name}
+                    `;
+                    categoryList.appendChild(listItem);
+                });
+            } else {
+                categoryList.innerHTML = '<li>No categories available.</li>';
+            }
+        })
+        .catch(error => console.error('Error loading categories:', error));
+}
+
+
+
+
+
+function loadFeedback() {
+    fetch('/adminpanel/get-feedback/')
+        .then(response => response.json())
+        .then(data => {
+            console.log("Received data:", data); 
+            const feedbackContainer = document.getElementById('feedback');
+            feedbackContainer.innerHTML = '';  
+
+            if (data.feedbacks && data.feedbacks.length > 0) {
+                data.feedbacks.forEach(feedback => {
+                    console.log("Feedback item:", feedback); 
+                    const feedbackElement = document.createElement('div');
+                    feedbackElement.classList.add('feedback-item');
+                    feedbackElement.innerHTML = `
+                        <h3>User: ${feedback.user_name}</h3>
+                        <p>Feedback: ${feedback.feedback_description}</p>
+                        <p>Time: ${feedback.feedback_time}</p> <!-- Display feedback time -->
+                    `;
+                    feedbackContainer.appendChild(feedbackElement);
+                });
+            } else {
+                feedbackContainer.innerHTML = '<p>No feedback available.</p>';
+            }
+        })
+        .catch(error => {
+            console.error("Error loading feedback:", error);
+            document.getElementById('feedback').innerHTML = '<p>Error loading feedback. Please try again later.</p>';
+        });
+}
+
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    const path = window.location.pathname;
+
+    if (path.includes('/categories')) {
+        showPage('categories');
+    } else if (path.includes('/user-details')) {
+        showPage('userDetails');
+    } else if (path.includes('/feedback')) {
+        showPage('feedback');
+    } else if (path.includes('/notifications')) {
+        showPage('notifications');
+    } else if (path.includes('/books')) {
+        showPage('books');
+    } else {
+        showPage('books'); 
+    }
+});
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    const hash = window.location.hash;
+    if (hash === 'feedback') {
+        showPage('feedback');
+    } else {
+        showPage('userDetails');  
+    }
+
+    enableEditableCells(); 
+});
+
+
+
+
+function enableEditableCells() {
+    const editableCells = document.querySelectorAll('.editable');
+    
+    editableCells.forEach(cell => {
+        cell.addEventListener('click', function() {
+            startEditing(cell); 
+        });
+    });
+}
+
+
+
+function searchUser() {
+    const searchInput = document.getElementById("searchInput").value.trim();
+    if (searchInput === "") {
+        alert("Please enter a search term.");
+        return;
+    }
+
+    fetch(`/search-users/?query=${encodeURIComponent(searchInput)}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === "success") {
+                const userTableBody = document.getElementById("userTableBody");
+                userTableBody.innerHTML = ""; 
+                data.users.forEach(user => {
+                    const newRow = document.createElement("tr");
+                    newRow.innerHTML = `
+                        <td><input type="checkbox" class="user-select" data-id="${user.user_id}"></td>
+                        <td contenteditable="true" class="editable">${user.user_name}</td>
+                        <td contenteditable="true" class="editable">${user.email}</td>
+                        <td>${user.last_login}</td>
+                        <td class="editable is-active">${user.is_active ? "Active" : "Inactive"}</td>
+                    `;
+                    userTableBody.appendChild(newRow);
+                });
+                enableEditableCells();  
+            } else {
+                alert("Error: " + data.message);
+            }
+        })
+        .catch(error => console.error("Error:", error));
+}
+
+
+function toggleSelectUser() {
+    const selectColumn = document.getElementById('selectColumn');
+    const checkboxes = document.querySelectorAll('.select-checkbox');
+    const deleteButton = document.getElementById('delete-btn');
+
+    if (selectColumn.style.display === 'none') {
+
+        selectColumn.style.display = 'table-cell';
+        checkboxes.forEach(checkbox => {
+            checkbox.style.display = 'table-cell';
+            checkbox.querySelector('input').checked = false; 
+        });
+        deleteButton.style.display = 'inline-block';
+    } else {
+
+        selectColumn.style.display = 'none';
+        checkboxes.forEach(checkbox => checkbox.style.display = 'none');
+        deleteButton.style.display = 'none';
+    }
+}
+
+
+function deleteSelectedReaders() {
+    const selectedCheckboxes = document.querySelectorAll('.reader-select:checked');
+    const selectedIds = Array.from(selectedCheckboxes).map(checkbox => checkbox.getAttribute('data-id'));
+
+    if (selectedIds.length === 0) {
+        alert("Please select at least one user to delete.");
+        return;
+    }
+
+    if (!confirm('Are you sure you want to deactivate the selected users?')) return;
+
+    const promises = selectedIds.map(userId => {
+        return fetch(`/adminpanel/deactivate-readers/${userId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+        })
+            .then(response => {
+                if (!response.ok) throw new Error('Failed to deactivate reader');
+                return response.json();
+            });
+    });
+
+    Promise.all(promises)
+        .then(results => {
+            let hasErrors = false;
+
+            results.forEach((data, index) => {
+                if (data.status === 'success') {
+                    const row = document.querySelector(`tr[data-id="${selectedIds[index]}"]`);
+                    if (row) row.remove();
+                } else {
+                    hasErrors = true;
+                    alert(`Error: ${data.message}`);
+                }
+            });
+
+            if (!hasErrors) {
+                alert("All selected users have been deactivated successfully.");
+            }
+            window.location.reload();
+        })
+        .catch(error => {
+            console.error("Error deactivating readers:", error);
+            alert("An error occurred while deactivating the readers.");
+        });
+}
+
+
+
+
+function deactivateSingleReader(userId) {
+    if (!confirm("Are you sure you want to deactivate this user?")) return;
+
+    fetch(`/adminpanel/deactivate-readers/${userId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+        },
+    })
+        .then(response => {
+            if (!response.ok) throw new Error('Failed to deactivate reader');
+            return response.json();
+        })
+        .then(data => {
+            if (data.status === 'success') {
+                alert(data.message);
+
+                const row = document.querySelector(`tr[data-id="${userId}"]`);
+                if (row) row.remove();
+            } else {
+                alert(`Error: ${data.message}`);
+            }
+        })
+        .catch(error => {
+            console.error("Error deactivating reader:", error);
+            alert("An error occurred while deactivating the reader.");
+        });
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+        const cookies = document.cookie.split("; ");
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.startsWith(name + "=")) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+
+function startEditing(cell) {
+    const field = cell.getAttribute('data-field');
+    const row = cell.closest('tr');
+    const readerId = row.dataset.id;
+
+    if (field === 'reader_rank') {
+        const currentValue = cell.textContent.trim();
+        const select = document.createElement('select');
+        select.innerHTML = `
+            <option value="Bronze" ${currentValue === 'Bronze' ? 'selected' : ''}>Bronze</option>
+            <option value="Silver" ${currentValue === 'Silver' ? 'selected' : ''}>Silver</option>
+            <option value="Gold" ${currentValue === 'Gold' ? 'selected' : ''}>Gold</option>
+        `;
+
+        cell.textContent = ''; 
+        cell.appendChild(select);
+        select.focus();
+
+        select.addEventListener('change', () => {
+            saveUpdateWithDropdown(readerId, field, select.value, cell);
+        });
+
+        select.addEventListener('blur', () => {
+            saveUpdateWithDropdown(readerId, field, select.value, cell);
+        });
+    } else {
+        cell.contentEditable = true;
+        cell.focus();
+
+        cell.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                saveUpdate(cell);
+            }
+        });
+
+        cell.addEventListener('blur', function () {
+            saveUpdate(cell);
+        });
+    }
+}
+
+
+function enableEditableField(cell, readerId, field) {
+    cell.contentEditable = true;
+    cell.focus();
+
+    cell.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            saveUpdate(cell);
+        }
+    });
+
+    cell.addEventListener('blur', function () {
+        saveUpdate(cell);
+    });
+}
+
+function saveUpdateWithDropdown(readerId, field, newValue, cell) {
+    sendUpdateRequest(readerId, field, newValue)
+        .then((data) => {
+            if (data.status === 'success') {
+                alert('Update successful!');
+                cell.textContent = newValue; 
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch((error) => {
+            console.error('Error updating rank:', error);
+            alert('An error occurred while updating the rank.');
+        });
+}
+
+function saveUpdate(cell) {
+    const newValue = cell.textContent.trim();
+    const field = cell.getAttribute('data-field');
+    const row = cell.closest('tr');
+    const readerId = row.dataset.id;
+
+    const formattedValue = field === 'is_active' ? (newValue.toLowerCase() === 'active' ? 'true' : 'false') : newValue;
+
+    sendUpdateRequest(readerId, field, formattedValue)
+        .then((data) => {
+            if (data.status === 'success') {
+                alert('Update successful!');
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch((error) => {
+            console.error('Error updating reader:', error);
+            alert('An error occurred while updating the reader.');
+        });
+
+    cell.contentEditable = false;
+}
+
+function sendUpdateRequest(readerId, field, value) {
+    console.log('Sending update request:', { readerId, field, value }); 
+
+    return fetch('/adminpanel/update-reader/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+        },
+        body: JSON.stringify({
+            reader_id: readerId,
+            field: field,
+            value: value,
+        }),
+    }).then((response) => response.json());
+}
+
+
+function saveRank(selectElement) {
+    const newValue = selectElement.value;
+    const readerId = selectElement.getAttribute('data-id');
+    const field = selectElement.getAttribute('data-field');
+
+    console.log('Updating rank:', { readerId, field, newValue }); 
+
+    fetch('/adminpanel/update-reader/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+        },
+        body: JSON.stringify({
+            reader_id: readerId,
+            field: field,
+            value: newValue,
+        }),
+    })
+    .then((response) => response.json())
+    .then((data) => {
+        if (data.status === 'success') {
+            alert('Rank updated successfully!');
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch((error) => {
+        console.error('Error updating rank:', error);
+        alert('An error occurred while updating the rank.');
+    });
+}
+
+
+
+
+
+function openInsertForm() {
+    document.getElementById("insertStackPage").style.display = "block";  
+    document.getElementById("userDetails").style.display = "none";  
+}
+
+function closeInsertForm() {
+    document.getElementById("insertStackPage").style.display = "none"; 
+    document.getElementById("userDetails").style.display = "block";  
+}
+
+document.getElementById('insertUserForm').addEventListener('submit', function (event) {
+    event.preventDefault();  
+
+    const formData = new FormData(this);  
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;  
+
+    const data = {};
+    formData.forEach((value, key) => {
+        data[key] = value;
+    });
+
+    fetch('/adminpanel/add-user/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrftoken,  
+            'Content-Type': 'application/json',  
+        },
+        body: JSON.stringify(data),  
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to add user');
+        }
+        return response.json();  
+    })
+    .then(data => {
+        if (data.status === 'success') {
+            alert('User added successfully!');
+            closeInsertForm();  
+            location.reload();  
+        } else {
+            alert('Error: ' + data.message);  
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while adding the user.');
+    });
+});
+
+
+
+
+function filterCategories() {
+    const query = document.getElementById('searchCategory').value.toLowerCase();
+    const categoryList = document.getElementById('categoryList').getElementsByTagName('li');
+    
+    Array.from(categoryList).forEach(category => {
+        const text = category.textContent.toLowerCase();
+        category.style.display = text.includes(query) ? '' : 'none';
+    });
+}
+
+
+function addCategory(event) {
+    event.preventDefault();
+
+    const newCategory = document.getElementById('newCategory').value.trim();
+
+    if (!newCategory) {
+        alert("Please enter a valid category name.");
+        return;
+    }
+
+    fetch('/adminpanel/add-category/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+        },
+        body: JSON.stringify({ category_name: newCategory }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert('Category added successfully!');
+
+            if (window.location.pathname.includes('categories')) {
+                loadCategories(); 
+            } else {
+                window.location.href = '/adminpanel/categories'; 
+            }
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error adding category:', error);
+        alert('An error occurred while adding the category.');
+    });
+}
+
+function deleteSelectedCategories() {
+    const selectedCategories = document.querySelectorAll('.category-select:checked'); 
+    const categoryIds = Array.from(selectedCategories).map(checkbox => checkbox.dataset.id);
+
+    if (categoryIds.length === 0) {
+        alert('Please select at least one category to delete.');
+        return;
+    }
+
+    if (!confirm('Are you sure you want to delete the selected categories?')) return;
+
+    fetch('/adminpanel/delete-categories/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+        },
+        body: JSON.stringify({ category_ids: categoryIds }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            selectedCategories.forEach(checkbox => {
+                const listItem = checkbox.closest('li');
+                listItem.remove(); 
+            });
+            alert('Categories deleted successfully!');
+
+            if (window.location.pathname.includes('categories')) {
+                loadCategories(); 
+            } else {
+                window.location.href = '/adminpanel/categories';
+            }
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error deleting categories:', error);
+        alert('An error occurred while deleting the categories.');
+    });
+}
+//------------------------------------------------------------------------------------------------
+let currentBookPage = 1;
+let categories = []; // Global categories array to reuse
+
+function fetchBooks(page = 1) {
+    Promise.all([
+        fetch(`/adminpanel/api/books/?page=${page}&limit=4`).then(res => res.json()),
+        fetch(`/adminpanel/api/categories/`).then(res => res.json())
+    ])
+        .then(([booksData, categoriesData]) => {
+            const books = booksData.books || [];
+            const categories = categoriesData.categories || [];
+            const tbody = document.getElementById('book-table-body');
+            tbody.innerHTML = ''; // Clear the table
+
+            if (books.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7">No books available.</td></tr>';
+                return;
+            }
+
+            // Populate rows for each book
+            books.forEach(book => {
+                const row = document.createElement('tr');
+                row.setAttribute('data-book-id', book.book_id);
+
+                row.innerHTML = `
+                    <td data-field="book_name" contenteditable="true">${book.book_name || 'N/A'}</td>
+                    <td data-field="book_author" contenteditable="true">${book.book_author || 'Unknown'}</td>
+                    <td data-field="book_barcode" contenteditable="true">${book.book_barcode || 'N/A'}</td>
+                    <td>
+                        <img src="${book.book_image || '/static/images/default.png'}" alt="Book Cover" width="50">
+                    </td>
+                    <td>
+                        <select data-id="${book.book_id}" data-field="category_id" onchange="saveBookField(this)">
+                            ${categories
+                                .map(category => {
+                                    const isSelected = category.category_id === book.category_id ? 'selected' : '';
+                                    return `<option value="${category.category_id}" ${isSelected}>${category.category_name}</option>`;
+                                })
+                                .join('')}
+                        </select>
+                    </td>
+                    <td>
+                        <select data-id="${book.book_id}" data-field="status" onchange="saveBookField(this)">
+                            <option value="Pending" ${book.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                            <option value="Accepted" ${book.status === 'Accepted' ? 'selected' : ''}>Accepted</option>
+                            <option value="Rejected" ${book.status === 'Rejected' ? 'selected' : ''}>Rejected</option>
+                        </select>
+                    </td>
+                    <td data-field="book_description" contenteditable="true">${book.book_description || 'No Description'}</td>
+                `;
+
+                tbody.appendChild(row);
+            });
+
+            enableCellEditing(); // Enable editing for contenteditable cells
+        })
+        .catch(error => {
+            console.error('Error fetching books or categories:', error);
+            alert('Failed to load books. Please try again.');
+        });
+}
+
+
+
+
+// Save dropdown changes (for category and status fields)
+function saveBookField(selectElement) {
+    const newValue = selectElement.value; // Get the new value
+    const bookId = selectElement.getAttribute('data-id'); // Get the book ID
+    const field = selectElement.getAttribute('data-field'); // Get the field being updated
+
+    console.log('Updating book field:', { bookId, field, newValue }); // Debugging
+
+    fetch(`/adminpanel/api/books/${bookId}/`, { // Corrected endpoint
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+        },
+        body: JSON.stringify({
+            [field]: newValue,
+        }),
+    })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(`Failed to update book. Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then((data) => {
+            if (data.status === 'success') {
+                alert('Book field updated successfully!');
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch((error) => {
+            console.error('Error updating book field:', error);
+            alert('An error occurred while updating the book field.');
+        });
+}
+
+// Enable editing for contenteditable fields
+function enableCellEditing() {
+    const tableBody = document.getElementById('book-table-body');
+    tableBody.addEventListener('blur', (event) => {
+        const target = event.target;
+        const field = target.getAttribute('data-field');
+
+        if (target.isContentEditable) {
+            const newValue = target.textContent.trim();
+            const bookId = target.closest('tr').getAttribute('data-book-id');
+
+            if (newValue) {
+                updateBook(bookId, field, newValue);
+            }
+        }
+    }, true);
+}
+
+// Update book data for contenteditable fields
+function updateBook(bookId, field, value) {
+    console.log(`Updating book: ID=${bookId}, Field=${field}, Value=${value}`);
+
+    return fetch(`/adminpanel/api/books/${bookId}/`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+        },
+        body: JSON.stringify({ [field]: value }),
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Failed to update book. Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Book updated successfully:', data);
+            alert('Book updated successfully!');
+        })
+        .catch(error => {
+            console.error('Error updating book:', error);
+            alert('An error occurred while updating the book.');
+        });
+}
+// Load books on page load
+document.addEventListener('DOMContentLoaded', () => {
+    fetchBooks(currentBookPage); // Load the first page of books
+});
+
+function toggleSelectBooks() {
+    const deleteButton = document.getElementById('delete-btn-books');
+    const tableHead = document.querySelector('.content-table-book thead tr');
+    const tableBody = document.querySelector('.content-table-book tbody');
+    const rows = tableBody.querySelectorAll('tr');
+
+    if (!tableHead) {
+        console.error("Table header not found.");
+        return;
+    }
+
+    const isSelectionEnabled = tableHead.querySelector('.book-select-column');
+
+    if (!isSelectionEnabled) {
+        // Enable selection mode
+        const selectHeader = document.createElement('th');
+        selectHeader.classList.add('book-select-column');
+        selectHeader.textContent = 'Select';
+        tableHead.prepend(selectHeader);
+
+        rows.forEach(row => {
+            if (!row.querySelector('.book-select-checkbox')) {
+                const checkboxCell = document.createElement('td');
+                checkboxCell.innerHTML = '<input type="checkbox" class="book-select-checkbox">';
+                row.prepend(checkboxCell);
+            }
+        });
+
+        deleteButton.style.display = 'inline-block'; // Show delete button
+    } else {
+        // Disable selection mode
+        const selectHeader = tableHead.querySelector('.book-select-column');
+        if (selectHeader) {
+            selectHeader.remove();
+        }
+
+        rows.forEach(row => {
+            const checkboxCell = row.querySelector('.book-select-checkbox');
+            if (checkboxCell) {
+                checkboxCell.closest('td').remove();
+            }
+        });
+
+        deleteButton.style.display = 'none'; // Hide delete button
+    }
+}
+function deleteSelectedBooks() {
+    const selectedCheckboxes = document.querySelectorAll('.book-select-checkbox:checked');
+    const selectedBookIds = Array.from(selectedCheckboxes).map(checkbox => {
+        return checkbox.closest('tr').getAttribute('data-book-id');
+    });
+
+    if (selectedBookIds.length === 0) {
+        alert('No books selected for deletion.');
+        return;
+    }
+
+    if (!confirm('Are you sure you want to delete the selected books?')) {
+        return;
+    }
+
+    Promise.all(
+        selectedBookIds.map(bookId =>
+            fetch(`/adminpanel/books/${bookId}/`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken') // Include CSRF token if required
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Failed to delete book with ID ${bookId}. Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+        )
+    )
+        .then(() => {
+            alert('Selected books deleted successfully!');
+            fetchBooks(currentBookPage); // Reload the books after deletion
+        })
+        .catch(error => {
+            console.error('Error deleting books:', error);
+            alert('An error occurred while deleting books. Please try again.');
+        });
+}
+
+
+function openUploadForm() {
+    document.getElementById("upload-book-container").style.display = "flex";
+}
+
+function closeUploadForm() {
+    document.getElementById("upload-book-container").style.display = "none";
+}
+function triggerFileInput() {
+    const fileInput = document.getElementById("fileInput");
+    fileInput.click();
+}
+
+function fileSelected(event) {
+    const fileNameDisplay = document.getElementById("fileNameDisplay");
+    const fileSizeLabel = document.getElementById("fileSizeLabel");
+
+    const file = event.target.files[0];
+    if (file) {
+        fileNameDisplay.textContent = file.name;
+        fileSizeLabel.textContent = `File size: ${(file.size / 1024 / 1024).toFixed(2)} MB`;
+    } else {
+        fileNameDisplay.textContent = "";
+        fileSizeLabel.textContent = "No file selected";
+    }
+}
+function triggerImageInput(inputId) {
+    const imageInput = document.getElementById(inputId);
+    imageInput.click();
+}
+
+function previewImage(event, previewId) {
+    const imageBox = document.getElementById(previewId);
+    const file = event.target.files[0];
+
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            imageBox.src = e.target.result;
+            imageBox.style.display = "block";
+        };
+        reader.readAsDataURL(file);
+    } else {
+        imageBox.style.display = "none";
+    }
+}
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    fetchCategories();
+});
+
+function fetchCategories() {
+    fetch("/adminpanel/api/categories/") // Ensure this matches your backend route
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const categorySelect = document.getElementById("category");
+            data.categories.forEach(category => {
+                const option = document.createElement("option");
+                option.value = category.category_id; // Use 'category_id' from JSON
+                option.textContent = category.category_name; // Use 'category_name' from JSON
+                categorySelect.appendChild(option);
+            });
+        })
+        .catch(error => console.error("Error fetching categories:", error));
+}
+function submitForm(event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    // Get form data
+    const form = document.getElementById("uploadForm");
+    const formData = new FormData(form);
+
+    // Send the POST request
+    fetch("/adminpanel/apis/book/", {
+        method: "POST",
+        body: formData,
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.status === "success") {
+                alert(data.message); // Display success message
+            } else {
+                alert(`Error: ${data.message}`); // Display error message
+            }
+        })
+        .catch(error => console.error("Error submitting form:", error));
+    
+}

@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    container_name: smartlib_db
+    restart: always
+    environment:
+      POSTGRES_DB: SmartLib_DB
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1202057
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - smartlib_network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "80:80"
+    networks:
+      - smartlib_network
+
+volumes:
+  postgres_data:
+
+networks:
+  smartlib_network:
+    driver: bridge

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/notifications.css' %}">
+    <title>Notifications Page-SmartLib</title>
+    <link rel="icon" type="image/png" href="{% static 'images/logo.png' %}">
+</head>
+<body>
+    <header>
+        <div class="left-header-container" id="left-header-container">
+            <a class="logo" id="logo" href="{% url 'index' %}">
+                <img src='{% static "images/logo.png" %}' width='60' height='60'>
+            </a>
+        </div>
+
+        <div class="right-header-container" id="right-header-container">
+            <a class="notification" id="notification" href='#'>
+                <img id="img_notification" src='{% static "images/empty_notification.png" %}' width='24' height='25'>
+            </a>
+            <div class="notification_dropdown" id="notification_dropdown">
+                <h2>Notification</h2>
+                <div id="empty_notification">
+                    <br>
+                    <p>No new notifications.</p>
+                </div>
+                <div id="notEmpty_notification" class="notEmpty_notification">
+                    <div id="notifi-item_1" class="notifi-item">
+                        <img id="notifi-item_image_1" src='{% static "images/notfi_feedback.png" %}' alt="img">
+                        <div class="text">
+                            <h4 id="notifi-item_title_1">Title....</h4>
+                            <p id="notifi-item_content_1">Content...</p>
+                        </div> 
+                    </div>
+                    <div id="notifi-item_2" class="notifi-item">
+                        <img id="notifi-item_image_2" src='{% static "images/notfi_upload.png" %}' alt="img">
+                        <div class="text">
+                            <h4 id="notifi-item_title_2">Title....</h4>
+                            <p id="notifi-item_content_2">Content...</p>
+                        </div> 
+                    </div>
+                    <div id="notifi-item_3" class="notifi-item">
+                        <img id="notifi-item_image_3" src='{% static "images/notfi_upload.png" %}' alt="img">
+                        <div class="text">
+                            <h4 id="notifi-item_title_3">Title....</h4>
+                            <p id="notifi-item_content_3">Content...</p>
+                        </div> 
+                    </div>
+                    <div id="viewAll_notification" class="view-all">
+                        <a href="#">View All Notifications</a>
+                    </div>
+                </div>
+            </div>
+
+            <a class="user" id="user" href='#'>
+                <img id="img_user" src='{% static "images/user.png" %}' width='27' height='25'>
+            </a>
+            <ul class="dropdown-user" id="dropdown-user">
+                <li onclick="handleOptionClick_user(this, 'Categories Database')">Categories Database</li>
+                <li onclick="handleOptionClick_user(this, 'User Details')">User Details</li>
+                <li onclick="handleOptionClick_user(this, 'View Feedback')">View Feedback</li>
+                <li onclick="handleOptionClick_user(this, 'Notification')">Notification</li>
+                <li onclick="handleOptionClick_user(this, 'Book Section')">Book Section</li>
+                <li onclick="handleOptionClick_user(this, 'Log out')" class="logout">Log Out</li>
+            </ul>
+        </div>
+    </header>
+
+    <div class="container">
+        <nav class="sidebar">
+            <button onclick="window.location.href='/adminpanel/categories/'">Categories Database</button>
+            <button onclick="window.location.href='/adminpanel/user-details/'">User Details</button>
+            <button onclick="window.location.href='/adminpanel/feedback/'">View Feedback</button>
+            <button onclick="window.location.href='/adminpanel/notifications/'">Notifications</button>
+            <button onclick="window.location.href='/adminpanel/books/'">Book Section</button>
+        </nav>
+
+        <div id="notifications">
+            <h1>Notifications</h1>
+            <table class="content-table">
+                <thead>
+                    <tr>
+                        <th>Book Name</th>
+                        <th>Author</th>
+                        <th>Category</th>
+                        <th>Preview Book</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for Book in books %}
+                    <tr>
+                        <td>{{ Book.book_name }}</td>
+                        <td>{{ Book.book_author }}</td>
+                        <td>{{ Book.category.category_name }}</td>
+                        <td>
+                            <button class="open-btn" onclick="openBook({{Book.book_id}})">Open Book</button>
+                        </td>
+                        <td>
+                            <button class="accept-btn" onclick="updateBookStatus({{ Book.book_id }}, 'Accepted')">Accept</button>
+                            <button class="reject-btn" onclick="updateBookStatus({{ Book.book_id }}, 'Rejected')">Reject</button>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4">No pending books found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                
+            </table>
+        </div>
+    
+        <script src="{% static 'js/notifications.js' %}"></script>
+    </body>
+    </html>

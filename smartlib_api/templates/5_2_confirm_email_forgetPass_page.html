@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="{% static '5_2_confirm_email_forgetPass_page/style.css' %}">
+    <link rel="icon" type="image/png" href="{% static 'images/logo.png' %}">
+    <title>SmartLib-Confirm Email</title>
+</head>
+<body> 
+    <!-- Header -->
+    <header>
+        <a class="logo" id="logo" href="{% url 'loginPage' %}"><img src="{% static 'images/logo.png' %}" width='60' height='60'></a>
+    </header>
+    
+    <!-- Main -->
+    <main>
+        <div class="container" id="container">
+            <div class="confirm-email" id="confirm-email">
+                <h1>Please confirm your email address</h1>
+                <br>
+                <p>Check your email "<strong>{{ email }}</strong>" inbox to reset your password.</p>
+                <img src="{% static 'images/email.png' %}">
+                <a href="{% url 'send_another_email_change_pass' email=email %}" id="send_email" class="send_email">Send me another email, please</a>
+                <div id="another_email_msg" class="another_email_msg hidden">You can send another email after <span id="countdown"></span> </div>
+
+                <a href="https://mail.google.com/" target="_blank" rel="noopener noreferrer">
+                    <button>Go To My Email</button>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Script -->
+    <script src="{% static '5_2_confirm_email_forgetPass_page/script.js' %}"></script>
+</body>
+<br><br>
+<!-- Footer -->
+<footer>
+    <p>copyright &copy; 2025 SmartLib. All Rights Reserved.</p>
+</footer>
+</html>
+<!-- done -->

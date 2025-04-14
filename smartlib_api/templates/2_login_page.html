@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static '2_login_page/style.css' %}">
+    <title>SmartLib-Login</title>
+    <link rel="icon" type="image/png" href="{% static 'images/logo.png' %}">
+</head>
+
+
+
+<body>
+
+    <br>
+    <!-- Header -->
+    <header>
+        <a class="logo" id="logo" href="{% url 'guestPage' %}"><img src="{% static 'images/logo.png' %}" width="60" height="60"></a>
+    </header>
+
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            {% if message.tags == 'info' %}
+            <div class="alert"
+                style="padding: 12px; border-radius: 5px; width: 100%; max-width: 500px; margin-bottom: 10px; font-size: 16px; align-self: center; background-color: #ffffff; color: #deb604; border: 1px solid #575fd5; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                <p style="margin: 0; font-size: 16px; line-height: 1.5;">{{ message }}</p>
+            </div>
+            {% elif message.tags == 'success' %}
+            <div class="alert"
+                style="padding: 12px; border-radius: 5px; width: 100%; max-width: 500px; margin-bottom: 10px; font-size: 16px; align-self: center; background-color: #ffffff; color: #299743; border: 1px solid #575fd5; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                <p style="margin: 0; font-size: 16px; line-height: 1.5;">{{ message }}</p>
+            </div>
+            {% elif message.tags == 'error' %}
+            <div class="alert"
+                style="padding: 12px; border-radius: 5px; width: 100%; max-width: 500px; margin-bottom: 10px; font-size: 16px; align-self: center; background-color: #ffffff; color: #db3030; border: 1px solid #575fd5; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                <p style="margin: 0; font-size: 16px; line-height: 1.5;">{{ message }}</p>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+
+    <!-- Main -->
+    <main>
+        <div class="container" id="container">
+
+            <!-- Sign In -->
+            <div class="form-container sign-in">
+                <form>
+                    <h1>Sign In</h1>
+                    <input id="email" type="email" placeholder="Email">
+                    <input id="password" type="password" placeholder="Password">
+                    <p id="error" class="error">Please fill all fields.</p>
+                    <a href="{% url 'findAccountPage' %}">Forget Your Password?</a>
+                    <button type="button" id="login">Sign In</button>
+                </form>
+            </div>
+
+            <!-- Toggle -->
+            <div class="toggle-container">
+                <div class="toggle">
+                    <div class="toggle-panel toggle-right">
+                        <h1>Hello, Reader!</h1>
+                        <p>Register with your personal details to use all of site features</p>
+                        <a href="{% url 'registerPage' %}">
+                            <button class="hidden" id="register">Sign Up</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Script -->
+    <script src="{% static '2_login_page/script.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
+</body>
+<br>
+<br>
+<!-- Footer -->
+<footer>
+    <p>copyright &copy; 2025 SmartLib. All Rights Reserved.</p>
+</footer>
+
+</html>

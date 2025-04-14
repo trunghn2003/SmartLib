@@ -1,0 +1,10 @@
+bcrypt
+djangorestframework
+sumy
+googletrans
+gtts
+pygame
+sympy
+psycopg
+psycopg2
+PyJWT

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/categories.css' %}">
+    <title>Categories Page-SmartLib</title>
+    <link rel="icon" type="image/png" href="{% static 'images/logo.png' %}">
+
+</head>
+<body>
+    <header>
+        <div class="left-header-container" id="left-header-container">
+            <a class="logo" id="logo" href="{% url 'index' %}">
+                <img src="{% static 'images/logo.png' %}" width="60" height="60" alt="Logo">
+            </a>
+        </div>
+
+        <div class="right-header-container" id="right-header-container">
+            <a class="notification" id="notification" href="#">
+                <img id="img_notification" src="{% static 'images/empty_notification.png' %}" width="24" height="25" alt="Notifications">
+            </a>
+            <div class="notification_dropdown" id="notification_dropdown">
+                <h2>Notifications</h2>
+                <div id="empty_notification">
+                    <p>No new notifications.</p>
+                </div>
+                <div id="notEmpty_notification" class="notEmpty_notification">
+                    <div id="notifi-item_1" class="notifi-item">
+                        <img id="notifi-item_image_1" src="{% static 'images/notfi_feedback.png' %}" alt="Feedback">
+                        <div class="text">
+                            <h4 id="notifi-item_title_1">Title....</h4>
+                            <p id="notifi-item_content_1">Content...</p>
+                        </div>
+                    </div>
+                    <div id="notifi-item_2" class="notifi-item">
+                        <img id="notifi-item_image_2" src="{% static 'images/notfi_upload.png' %}" alt="Upload">
+                        <div class="text">
+                            <h4 id="notifi-item_title_2">Title....</h4>
+                            <p id="notifi-item_content_2">Content...</p>
+                        </div>
+                    </div>
+                    <div id="notifi-item_3" class="notifi-item">
+                        <img id="notifi-item_image_3" src="{% static 'images/notfi_upload.png' %}" alt="Upload">
+                        <div class="text">
+                            <h4 id="notifi-item_title_3">Title....</h4>
+                            <p id="notifi-item_content_3">Content...</p>
+                        </div>
+                    </div>
+                    <div id="viewAll_notification" class="view-all">
+                        <a href="#">View All Notifications</a>
+                    </div>
+                </div>
+            </div>
+
+            <a class="user" id="user" href="#">
+                <img id="img_user" src="{% static 'images/user.png' %}" width="27" height="25" alt="User">
+            </a>
+            <ul class="dropdown-user" id="dropdown-user">
+                <li onclick="handleOptionClick_user(this, 'Categories Database')">Categories Database</li>
+                <li onclick="handleOptionClick_user(this, 'User Details')">User Details</li>
+                <li onclick="handleOptionClick_user(this, 'View Feedback')">View Feedback</li>
+                <li onclick="handleOptionClick_user(this, 'Notification')">Notification</li>
+                <li onclick="handleOptionClick_user(this, 'Book Section')">Book Section</li>
+                <li onclick="handleOptionClick_user(this, 'Log out')" class="logout">Log Out</li>
+            </ul>
+        </div>
+    </header>
+
+    <div class="container">
+        <nav class="sidebar">
+            <button onclick="window.location.href='http://127.0.0.1:8000/adminpanel/categories/'">
+                Categories Database
+            </button>
+            <button onclick="window.location.href='http://127.0.0.1:8000/adminpanel/user-details/'">
+                User Details
+            </button>
+            <button onclick="window.location.href='http://127.0.0.1:8000/adminpanel/feedback/'">
+                View Feedback
+            </button>
+            <button onclick="window.location.href='http://127.0.0.1:8000/adminpanel/notifications/'">
+                Notifications
+            </button>
+            <button onclick="window.location.href='http://127.0.0.1:8000/adminpanel/books/'">
+                Book Section
+            </button>
+        </nav>
+
+        <main>
+            <div id="categories">
+                <h2>Categories</h2>
+                <div class="category-actions">
+                    <div class="left-section">
+                        <input type="text" id="searchCategory" placeholder="Search Categories" oninput="filterCategories()">
+                        <ul id="categoryList">
+                            {% for category in categories %}
+                                <li>
+                                    <label>
+                                        <input type="checkbox" class="category-select" data-id="{{ category.category_id }}">
+                                        <span>{{ category.category_name }}</span>
+                                    </label>
+                                </li>
+                            {% empty %}
+                                <li>No categories available.</li>
+                            {% endfor %}
+                        </ul>
+                        
+                        
+                    </div>
+                    <div class="right-section">
+                        <form id="addCategoryForm" onsubmit="addCategory(event)">
+                            {% csrf_token %}
+                            <input type="text" id="newCategory" placeholder="New Category" required>
+                            <button type="submit">Add</button>
+                        </form>
+                        <button id="deleteSelectedCategories" onclick="deleteSelectedCategories()">Delete Selected</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+    </div>
+
+
+    <script src="{% static 'js/categories.js' %}"></script>
+</body>
+</html>

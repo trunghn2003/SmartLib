@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+        {% load static %}
+        <link rel="stylesheet" href="{% static '15_simulation_page/style.css' %}">
+        <link rel="icon" type="image/png" href="{% static 'images/logo.png' %}" sizes="32x32">
+        <title>SmartLib-Simulation Page</title>
+    </head>
+
+    <body>
+
+        <!-- Header -->
+        <header>
+            <div class="left-header-container" id="left-header-container">
+
+                <a class="logo" id="logo" href="{% url 'homePage' %}"><img src='{% static "images/logo.png" %}' width='60' height='60'></a>
+
+                <a class="Categories" id="Categories" href=''>Categories</a>
+                <ul class="dropdown-categories" id="dropdown-categories"></ul>
+
+                <div class="search">
+                    <i class="fa fa-search search-icon"></i>
+                    <input class="search-input" id="search-input" type="search" placeholder="Search for anything">
+                </div>
+
+            </div>
+
+            <div class="right-header-container" id="right-header-container">
+                
+                <a class="help" id="help" href="{% url 'simulationPage' %}"><img src='{% static "images/help.png" %}' width='60' height='60'></a>
+                <a class="fav_list" id="fav_list" href=''><img id="img_fav_list" src='{% static "images/fav_list.png" %}' width='24' height='25'></a>
+                <div class="fav_list_dropdown" id="fav_list_dropdown">
+                    <h2>WishList</h2>
+                    <div id="empty_wishList">
+                        <br>
+                        <p>Your wishlist is empty.</p>
+                    </div>
+                    <div id="notEmpty_wishList" class="notEmpty_notification">
+                        <div id="wishList-item_1" class="notifi-item">
+                            <img id="wishList-item_image_1" src='{% static "images/book.png" %}' alt="img">
+                            <div class="text">
+                                <h4 id="wishList-item_title_1">Title....</h4>
+                                <p id="wishList-item_author_1">Author: null..</p>
+                                <p id="wishList-item_category_1">Category: null..</p>
+                            </div> 
+                        </div>
+                        <div id="wishList-item_2" class="notifi-item">
+                            <img id="wishList-item_image_2" src='{% static "images/book.png" %}' alt="img">
+                            <div class="text">
+                                <h4 id="wishList-item_title_2">Title....</h4>
+                                <p id="wishList-item_author_2">Author: null..</p>
+                                <p id="wishList-item_category_2">Category: null..</p>
+                            </div> 
+                        </div>
+                        <div id="wishList-item_3" class="notifi-item">
+                            <img id="wishList-item_image_3" src='{% static "images/book.png" %}' alt="img">
+                            <div class="text">
+                                <h4 id="wishList-item_title_3">Title....</h4>
+                                <p id="wishList-item_author_3">Author: null..</p>
+                                <p id="wishList-item_category_3">Category: null..</p>
+                            </div> 
+                        </div>
+                        <div id="viewAll_wishList" class="view-all">
+                            <a href="/wish-listPage">View All WishList</a>
+                        </div>
+                    </div>
+                </div>
+
+                <a class="notification" id="notification" href=''><img id="img_notification" src='{% static "images/empty_notification.png" %}' width='24' height='25'></a>
+                <div class="notification_dropdown" id="notification_dropdown">
+                    <h2>Notification</h2>
+                    <div id="empty_notification">
+                        <br>
+                        <p>No new notifications.</p>
+                    </div>
+                    <div id="notEmpty_notification" class="notEmpty_notification">
+                        <div id="notifi-item_1" class="notifi-item">
+                            <img id="notifi-item_image_1" src='{% static "images/reject.png" %}' alt="img">
+                            <div class="text">
+                                <h4 id="notifi-item_title_1">Title....</h4>
+                                <p id="notifi-item_content_1">Content...</p>
+                            </div> 
+                        </div>
+                        <div id="notifi-item_2" class="notifi-item">
+                            <img id="notifi-item_image_2" src='{% static "images/accept.png" %}' alt="img">
+                            <div class="text">
+                                <h4 id="notifi-item_title_2">Title....</h4>
+                                <p id="notifi-item_content_2">Content...</p>
+                            </div> 
+                        </div>
+                        <div id="notifi-item_3" class="notifi-item">
+                            <img id="notifi-item_image_3" src='{% static "images/point.png" %}' alt="img">
+                            <div class="text">
+                                <h4 id="notifi-item_title_3">Title....</h4>
+                                <p id="notifi-item_content_3">Content...</p>
+                            </div> 
+                        </div>
+                        <div id="viewAll_notification" class="view-all">
+                            <a href="/notificationPage">View All Notifications</a>
+                        </div>
+                    </div>
+                </div>
+
+                <a class="user" id="user" href=''><img id="img_user" src='{% static "images/user.png" %}' width='27' height='25'></a>
+                <ul class="dropdown-user" id="dropdown-user">
+                    <li onclick="handleOptionClick_user('Rank')" class="user-rank">
+                        <p id="user_rank">Rank: Rookie</p>
+                        <img id="img_rank" src="{% static 'images/rookie_rank.png' %}" alt="img" width="25" height="25">
+                    </li>
+                    <hr class="divider">
+                    <li onclick="handleOptionClick_user('User Profile')">User Profile</li>
+                    <li onclick="handleOptionClick_user('My Uploaded Book')">My Uploaded Book</li>
+                    <li onclick="handleOptionClick_user('Wish List')">Wish List</li>
+                    <li onclick="handleOptionClick_user('Notification')">Notification</li>
+                    <li onclick="handleOptionClick_user('Send FeedBack')">Send Feedback</li>
+                    <li onclick="handleOptionClick_user('Log out')" class="logout">Log Out</li>
+                </ul>
+                
+
+                <div class="feedback-stack" id="feedback-stack">
+                    <div class="feedback-content">
+                        <span class="close-btn" id="closeBtn">&times;</span>
+                        <h2>Send Feedback</h2>
+                        <textarea id="feedbackText" placeholder="Write your feedback here..."></textarea>
+                        <button id="sendFeedback">Send</button>
+                    </div>
+                </div>
+
+                <div class="feedback-stack" id="afterfeedback-stack">
+                    <div class="feedback-content">
+                        <span class="close-btn" id="closeBtn2">&times;</span>
+                        <h2>Feedback Sends Successfully</h2>
+                        <p>Thank you for your feedback! We appreciate it and will work on improving. 😊</p>
+                        <br>
+                        <p>note that: you achieved +30 point for added feedback <img src='{% static "images/80z.gif" %}' width="20" height="20"></p>
+                        <br>
+                        <br>
+                        <button id="doneFeedback">Done</button>
+                    </div>
+                </div>
+            </div>
+
+        </header>
+
+        <!-- Main -->
+         <main>
+            <div class="main_container" id="main_container">
+                <!-- Center -->
+                <div class="image-container" id="image-container">
+                    <a class="prev" id="prev" href=''><img src='{% static "images/prev.png" %}'></a>
+                    <img id="advertisement-image" src='{% static "images/s1.png" %}' alt="advertisement">
+                    <a class="next" id="next" href='#'><img src='{% static "images/next.png" %}'></a>
+                </div>
+            </div>
+         </main>
+
+        <!-- Script -->
+        <script src="{% static '15_simulation_page/script.js' %}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
+
+    </body>
+    <br>
+    <br>
+    <!-- Footer -->
+    <footer>
+        <h3>Discover, Learn & Read Your Favorite Books</h3>
+        <div class="right">
+            <div class="links">
+                <a href="{% url 'privacyPolicyPage' %}" target="_blank">Privacy Policy</a>
+                <a href="{% url 'aboutUsPage' %}" target="_blank">About Us</a>
+                <a href="mailto:smartlib120@gmail.com">Contact Us</a>
+            </div>
+            <div class="social">
+                <a href="https://www.instagram.com/smartlib_120" target="_blank">
+                    <i class='bx bxl-instagram'></i>
+                </a>
+                <a href="https://www.facebook.com/profile.php?id=61572494046162&mibextid=wwXIfr&mibextid=wwXIfr" target="_blank">
+                    <i class='bx bxl-facebook-square'></i>
+                </a>
+                <a href="https://x.com/smartlib120?s=11&t=w0O9NTjE-iKVbvTAKY1iLg" target="_blank" class="x-link">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M17.5 2H21L13.5 10.5L22 22H15.5L10.5 15.5L4.5 22H1.5L9.5 13L1 2H7.5L12 8.5L17.5 2Z"/>
+                    </svg>
+                </a>
+                
+            </div>
+            <p>copyright &copy; 2025 SmartLib. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+
+</html>

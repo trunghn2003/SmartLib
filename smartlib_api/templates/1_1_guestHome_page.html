@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static '1_1_guestHome_page/style.css' %}">
+    <link rel="icon" type="image/png" href="{% static 'images/logo.png' %}" sizes="32x32">
+    <title>SmartLib-Guest Page</title>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="left-header-container" id="left-header-container">
+
+            <a class="logo" id="logo" href="{% url 'guestPage' %}"><img src='{% static "images/logo.png" %}' width='60' height='60'></a>
+
+            <a class="Categories" id="Categories" href='#'>Categories</a>
+            <ul class="dropdown-categories" id="dropdown-categories"></ul>
+
+            <div class="search">
+                <i class="fa fa-search search-icon"></i>
+                <input class="search-input" id="search-input" type="search" placeholder="Search for anything">
+            </div>
+
+        </div>
+
+        <div class="right-header-container" id="right-header-container">
+            <a href="{% url 'loginPage' %}">
+                <button class="button">Sign In</button>
+            </a>
+
+            <a href="{% url 'registerPage' %}">
+                <button class="button">Sign Up</button>
+            </a>
+
+        </div>
+    </header>
+
+    <!-- Main -->
+    <main>
+        <div class="main_container" id="main_container">
+
+            <!-- Center -->
+            <div class="image-container" id="image-container">
+                <img id="advertisement-image" src='{% static "images/0_advertisement_photo.png" %}' alt="advertisement">
+            </div>
+
+            <!-- Bottom -->
+            <div class="book-lists-container" id="book-lists-container">
+
+                <!-- Most Readed Book -->
+                <div class="most-readed-book-container" id="most-readed-book-container">
+
+                    <h3>Most Readed Book</h3>
+
+                    <div class="most-readed-book-list-container" id="most-readed-book-list-container">
+
+                        <a class="prev" id="book_most_readed_prev" href='#'><img src='{% static "images/prev.png" %}'></a>
+                        
+                            <!-- Book 1 -->
+                            <div class="book-item" id="book_most_readed_item_1">
+                                <img id="book_most_readed_image_1" src='{% static "images/book.png" %}' alt="Book Cover" class="book-cover">
+                                <div class="book-details">
+                                    <h3 id="book_most_readed_name_1">Book test</h3>
+                                    <p id="book_most_readed_author_1">Author: null..</p>
+                                    <p id="book_most_readed_category_1">Category: null..</p>
+                                    <p id="book_most_readed_rating_1">Rating: ⭐</p>
+                                </div>
+                            </div>
+                        
+                            <!-- Book 2 -->
+                            <div class="book-item" id="book_most_readed_item_2">
+                                <img id="book_most_readed_image_2" src='{% static "images/book.png" %}' alt="Book Cover" class="book-cover">
+                                <div class="book-details">
+                                    <h3 id="book_most_readed_name_2">Book test</h3>
+                                    <p id="book_most_readed_author_2">Author: null..</p>
+                                    <p id="book_most_readed_category_2">Category: null..</p>
+                                    <p id="book_most_readed_rating_2">Rating: ⭐</p>
+                                </div>
+                            </div>
+                        
+                            <!-- Book 3 -->
+                            <div class="book-item" id="book_most_readed_item_3">
+                                <img id="book_most_readed_image_3" src='{% static "images/book.png" %}' alt="Book Cover" class="book-cover">
+                                <div class="book-details">
+                                    <h3 id="book_most_readed_name_3">Book test</h3>
+                                    <p id="book_most_readed_author_3">Author: null..</p>
+                                    <p id="book_most_readed_category_3">Category: null..</p>
+                                    <p id="book_most_readed_rating_3">Rating: ⭐</p>
+                                </div>
+                            </div>
+                        
+                            <!-- Book 4 -->
+                            <div class="book-item" id="book_most_readed_item_4">
+                                <img id="book_most_readed_image_4" src='{% static "images/book.png" %}' alt="Book Cover" class="book-cover">
+                                <div class="book-details">
+                                    <h3 id="book_most_readed_name_4">Book test</h3>
+                                    <p id="book_most_readed_author_4">Author: null..</p>
+                                    <p id="book_most_readed_category_4">Category: null..</p>
+                                    <p id="book_most_readed_rating_4">Rating: ⭐</p>
+                                </div>
+                            </div>
+                        
+                            <!-- Book 5 -->
+                            <div class="book-item" id="book_most_readed_item_5">
+                                <img id="book_most_readed_image_5" src='{% static "images/book.png" %}' alt="Book Cover" class="book-cover">
+                                <div class="book-details">
+                                    <h3 id="book_most_readed_name_5">Book test</h3>
+                                    <p id="book_most_readed_author_5">Author: null..</p>
+                                    <p id="book_most_readed_category_5">Category: null..</p>
+                                    <p id="book_most_readed_rating_5">Rating: ⭐</p>
+                                </div>
+                            </div>
+                        
+                            <a class="next" id="book_most_readed_next" href='#'><img src='{% static "images/next.png" %}'></a>
+                    </div>
+                </div>
+
+                <hr>
+
+                <!-- Most Rating Book -->
+                <div class="most-rating-book-container" id="most-rating-book-container">
+                        
+                    <h3>Most Rating Book</h3>
+
+                    <div class="most-rating-book-list-container" id="most-rating-book-list-container">
+                        
+                        <a class="prev" id="book_most_rating_prev" href='#'><img src='{% static "images/prev.png" %}'></a>
+                        
+                        <!-- Book 1 -->
+                        <div class="book-item" id="book_most_rating_item_1">
+                            <img id="book_most_rating_image_1" src='{% static "images/book.png" %}' alt="Book Cover" class="book-cover">
+                            <div class="book-details">
+                                <h3 id="book_most_rating_name_1">Book test</h3>
+                                <p id="book_most_rating_author_1">Author: null..</p>
+                                <p id="book_most_rating_category_1">Category: null..</p>
+                                <p id="book_most_rating_rating_1">Rating: ⭐</p>
+                            </div>
+                        </div>
+
+                        <!-- Book 2 -->
+                        <div class="book-item" id="book_most_rating_item_2">
+                            <img id="book_most_rating_image_2" src='{% static "images/book.png" %}' alt="Book Cover" class="book-cover">
+                            <div class="book-details">
+                                <h3 id="book_most_rating_name_2">Book test</h3>
+                                <p id="book_most_rating_author_2">Author: null..</p>
+                                <p id="book_most_rating_category_2">Category: null..</p>
+                                <p id="book_most_rating_rating_2">Rating: ⭐</p>
+                            </div>
+                        </div>
+
+                        <!-- Book 3 -->
+                        <div class="book-item" id="book_most_rating_item_3">
+                            <img id="book_most_rating_image_3" src='{% static "images/book.png" %}' alt="Book Cover" class="book-cover">
+                            <div class="book-details">
+                                <h3 id="book_most_rating_name_3">Book test</h3>
+                                <p id="book_most_rating_author_3">Author: null..</p>
+                                <p id="book_most_rating_category_3">Category: null..</p>
+                                <p id="book_most_rating_rating_3">Rating: ⭐</p>
+                            </div>
+                        </div>
+
+                        <!-- Book 4 -->
+                        <div class="book-item" id="book_most_rating_item_4">
+                            <img id="book_most_rating_image_4" src='{% static "images/book.png" %}' alt="Book Cover" class="book-cover">
+                            <div class="book-details">
+                                <h3 id="book_most_rating_name_4">Book test</h3>
+                                <p id="book_most_rating_author_4">Author: null..</p>
+                                <p id="book_most_rating_category_4">Category: null..</p>
+                                <p id="book_most_rating_rating_4">Rating: ⭐</p>
+                            </div>
+                        </div>
+
+                        <!-- Book 5 -->
+                        <div class="book-item" id="book_most_rating_item_5">
+                            <img id="book_most_rating_image_5" src='{% static "images/book.png" %}' alt="Book Cover" class="book-cover">
+                            <div class="book-details">
+                                <h3 id="book_most_rating_name_5">Book test</h3>
+                                <p id="book_most_rating_author_5">Author: null..</p>
+                                <p id="book_most_rating_category_5">Category: null..</p>
+                                <p id="book_most_rating_rating_5">Rating: ⭐</p>
+                            </div>
+                        </div>
+
+                        <a class="next" id="book_most_rating_next" href='#'><img src='{% static "images/next.png" %}'></a>
+
+
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <!-- Last Updated Book -->
+                <div class="last-updated-book-container" id="last-updated-book-container">
+                    
+                    <h3>Last Uploaded Book</h3>
+
+                    <div class="last-updated-book-list-container" id="last-updated-book-list-container">
+                        
+                        <a class="prev" id="book_last_updated_prev" href='#'><img src='{% static "images/prev.png" %}'></a>
+
+                        <!-- Book 1 -->
+                        <div class="book-item" id="book_last_updated_item_1">
+                            <img id="book_last_updated_image_1" src='{% static "images/book.png" %}' alt="Book Cover" class="book-cover">
+                            <div class="book-details">
+                                <h3 id="book_last_updated_name_1">Book test</h3>
+                                <p id="book_last_updated_author_1">Author: null..</p>
+                                <p id="book_last_updated_category_1">Category: null..</p>
+                                <p id="book_last_updated_rating_1">Rating: ⭐</p>
+                            </div>
+                        </div>
+
+                        <!-- Book 2 -->
+                        <div class="book-item" id="book_last_updated_item_2">
+                            <img id="book_last_updated_image_2" src='{% static "images/book.png" %}' alt="Book Cover" class="book-cover">
+                            <div class="book-details">
+                                <h3 id="book_last_updated_name_2">Book test</h3>
+                                <p id="book_last_updated_author_2">Author: null..</p>
+                                <p id="book_last_updated_category_2">Category: null..</p>
+                                <p id="book_last_updated_rating_2">Rating: ⭐</p>
+                            </div>
+                        </div>
+
+                        <!-- Book 3 -->
+                        <div class="book-item" id="book_last_updated_item_3">
+                            <img id="book_last_updated_image_3" src='{% static "images/book.png" %}' alt="Book Cover" class="book-cover">
+                            <div class="book-details">
+                                <h3 id="book_last_updated_name_3">Book test</h3>
+                                <p id="book_last_updated_author_3">Author: null..</p>
+                                <p id="book_last_updated_category_3">Category: null..</p>
+                                <p id="book_last_updated_rating_3">Rating: ⭐</p>
+                            </div>
+                        </div>
+
+                        <!-- Book 4 -->
+                        <div class="book-item" id="book_last_updated_item_4">
+                            <img id="book_last_updated_image_4" src='{% static "images/book.png" %}' alt="Book Cover" class="book-cover">
+                            <div class="book-details">
+                                <h3 id="book_last_updated_name_4">Book test</h3>
+                                <p id="book_last_updated_author_4">Author: null..</p>
+                                <p id="book_last_updated_category_4">Category: null..</p>
+                                <p id="book_last_updated_rating_4">Rating: ⭐</p>
+                            </div>
+                        </div>
+
+                        <!-- Book 5 -->
+                        <div class="book-item" id="book_last_updated_item_5">
+                            <img id="book_last_updated_image_5" src='{% static "images/book.png" %}' alt="Book Cover" class="book-cover">
+                            <div class="book-details">
+                                <h3 id="book_last_updated_name_5">Book test</h3>
+                                <p id="book_last_updated_author_5">Author: null..</p>
+                                <p id="book_last_updated_category_5">Category: null..</p>
+                                <p id="book_last_updated_rating_5">Rating: ⭐</p>
+                            </div>
+                        </div>
+
+                        <a class="next" id="book_last_updated_next" href='#'><img src='{% static "images/next.png" %}'></a>
+
+                        
+                    </div>
+
+                </div>
+
+                
+
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Script -->
+    <script src="{% static '1_1_guestHome_page/script.js' %}"></script>
+</body>
+<br>
+<br>
+<!-- Footer -->
+<footer>
+    <h3>Discover, Learn & Read Your Favorite Books</h3>
+    <div class="right">
+        <div class="links">
+            <a href="{% url 'privacyPolicyPage' %}" target="_blank">Privacy Policy</a>
+            <a href="{% url 'aboutUsPage' %}" target="_blank">About Us</a>
+            <a href="mailto:smartlib120@gmail.com">Contact Us</a>
+        </div>
+        <div class="social">
+            <a href="https://www.instagram.com/smartlib_120" target="_blank">
+                <i class='bx bxl-instagram'></i>
+            </a>
+            <a href="https://www.facebook.com/profile.php?id=61572494046162&mibextid=wwXIfr&mibextid=wwXIfr" target="_blank">
+                <i class='bx bxl-facebook-square'></i>
+            </a>
+            <a href="https://x.com/smartlib120?s=11&t=w0O9NTjE-iKVbvTAKY1iLg" target="_blank" class="x-link">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M17.5 2H21L13.5 10.5L22 22H15.5L10.5 15.5L4.5 22H1.5L9.5 13L1 2H7.5L12 8.5L17.5 2Z"/>
+                </svg>
+            </a>
+            
+        </div>
+        <p>copyright &copy; 2025 SmartLib. All Rights Reserved.</p>
+    </div>
+</footer>
+
+</html>

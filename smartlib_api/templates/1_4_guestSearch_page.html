@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static '1_4_guestSearch_page/style.css' %}">
+    <link rel="icon" type="image/png" href="{% static 'images/logo.png' %}" sizes="32x32">
+    <title>SmartLib-Guest Search Page</title>
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <div class="left-header-container" id="left-header-container">
+
+            <a class="logo" id="logo" href="{% url 'guestPage' %}"><img src='{% static "images/logo.png" %}' width='60' height='60'></a>
+
+            <a class="Categories" id="Categories" href='#'>Categories</a>
+            <ul class="dropdown-categories" id="dropdown-categories"></ul>
+
+            <div class="search">
+                <i class="fa fa-search search-icon"></i>
+                <input class="search-input" id="search-input" type="search" placeholder="Search for anything">
+            </div>
+
+        </div>
+
+        <div class="right-header-container" id="right-header-container">
+            <a href="{% url 'loginPage' %}">
+                <button class="button">Sign In</button>
+            </a>
+
+            <a href="{% url 'registerPage' %}">
+                <button class="button">Sign Up</button>
+            </a>
+
+        </div>
+    </header>
+
+    <section class="filtering_section">
+        <div class="start">
+            <div class="buttons">
+                <label>Filter</label>
+
+                <select name="Sort by" id="sorting_way">
+                    <option value="nothing">-----------------------</option>
+                    <option value="reviewed">Most-Viewed</option>
+                    <option value="rated">Most-Favorited</option>
+                    <option value="newest">Newest</option>
+                </select>
+            </div>
+            <hr>
+
+            <div class="categories_checkBox">
+                <label>Categories:</label>
+                <div class="option">
+                    <input type="checkbox" id="sport" name="category" value="Sport">
+                    <p for="sport">Sport</p>
+                </div>
+                <div class="option">
+                    <input type="checkbox" id="history" name="category" value="History">
+                    <p for="history">History</p>
+                </div>
+            </div>
+            <hr>
+            <label>Ratings:</label>
+            <div class="rating">
+                <span class="star" data-rating="1">&#9733;</span>
+                <span class="star" data-rating="2">&#9733;</span>
+                <span class="star" data-rating="3">&#9733;</span>
+                <span class="star" data-rating="4">&#9733;</span>
+                <span class="star" data-rating="5">&#9733;</span>
+                <div class="star_count" id="star_count">
+                    <p class="star_num" id="star_num"></p>
+                </div>
+            </div>
+            
+            
+            <hr>
+
+            <button id="filter">Filter</button>
+        </div>
+
+        <hr class="vertical-line">
+
+        <div class="end">
+            <div class="cards">
+                <div class="card" id="card_1">
+                    <img id="book_last_updated_image_1" src='{% static "images/book.png" %}' alt="Book Cover" class="book-cover">
+                    <div class="data">
+                        <span id="title_1" class="title"><a href="#">Title...</a></span>
+                        <span id="author_1" class="author">Author...</span>
+                        <div class="description">
+                            <span id="category_1">Category...</span>
+                        </div>
+                        <div class="rate">
+                            <span id="rating_1" class="valuation">4 ⭐⭐⭐⭐</span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr id="hr_1">
+
+                <div class="card" id="card_2">
+                    <img id="book_last_updated_image_2" src='{% static "images/book.png" %}' alt="Book Cover" class="book-cover">
+                    <div class="data">
+                        <span id="title_2" class="title"><a href="#">Title...</a></span>
+                        <span id="author_2" class="author">Author...</span>
+                        <div class="description">
+                            <span id="category_2">Category...</span>
+                        </div>
+                        <div class="rate">
+                            <span id="rating_2" class="valuation">4 ⭐⭐⭐⭐</span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr id="hr_2">
+
+                <div class="card" id="card_3">
+                    <img id="book_last_updated_image_3" src='{% static "images/book.png" %}' alt="Book Cover" class="book-cover">
+                    <div class="data">
+                        <span id="title_3" class="title"><a href="#">Title...</a></span>
+                        <span id="author_3" class="author">Author...</span>
+                        <div class="description">
+                            <span id="category_3">Category...</span>
+                        </div>
+                        <div class="rate">
+                            <span id="rating_3" class="valuation">4 ⭐⭐⭐⭐</span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr id="hr_3">
+
+                <div class="card" id="card_4">
+                    <img id="book_last_updated_image_4" src='{% static "images/book.png" %}' alt="Book Cover" class="book-cover">
+                    <div class="data">
+                        <span id="title_4" class="title"><a href="#">Title...</a></span>
+                        <span id="author_4" class="author">Author...</span>
+                        <div class="description">
+                            <span id="category_4">Category...</span>
+                        </div>
+                        <div class="rate">
+                            <span id="rating_4" class="valuation">4 ⭐⭐⭐⭐</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="full_button" id="full_button">
+                <a id="prev" href='#'><img src='{% static "images/prev_page_empty.png" %}' width="25px" height="25px"></a>
+                <a id="next" href='#'><img src='{% static "images/next_page_empty.png" %}' width="25px" height="25px"></a>
+            </div>
+        </div>
+    </section>
+
+    <script src="{% static '1_4_guestSearch_page/script.js' %}"></script>
+</body>
+    <br>
+    <br>
+    <!-- Footer -->
+    <footer>
+        <h3>Discover, Learn & Read Your Favorite Books</h3>
+        <div class="right">
+            <div class="links">
+                <a href="{% url 'privacyPolicyPage' %}" target="_blank">Privacy Policy</a>
+                <a href="{% url 'aboutUsPage' %}" target="_blank">About Us</a>
+                <a href="mailto:smartlib120@gmail.com">Contact Us</a>
+            </div>
+            <div class="social">
+                <a href="https://www.instagram.com/smartlib_120" target="_blank">
+                    <i class='bx bxl-instagram'></i>
+                </a>
+                <a href="https://www.facebook.com/profile.php?id=61572494046162&mibextid=wwXIfr&mibextid=wwXIfr" target="_blank">
+                    <i class='bx bxl-facebook-square'></i>
+                </a>
+                <a href="https://x.com/smartlib120?s=11&t=w0O9NTjE-iKVbvTAKY1iLg" target="_blank" class="x-link">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M17.5 2H21L13.5 10.5L22 22H15.5L10.5 15.5L4.5 22H1.5L9.5 13L1 2H7.5L12 8.5L17.5 2Z"/>
+                    </svg>
+                </a>
+                
+            </div>
+            <p>copyright &copy; 2025 SmartLib. All Rights Reserved.</p>
+        </div>
+    </footer>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">        
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+        <title>Confirm Email Page</title>
+        <style>
+            *{
+                box-sizing: border-box;
+                font-family: 'Montserrat', sans-serif;
+            }
+
+            /* body */
+            body {
+                margin: 0;
+                padding: 0;
+                background-color: #f4f4f4;
+            }
+            /*-------------------------------------------------------------*/
+
+            /* container */
+            .container{
+                max-width: 600px;
+                margin: 0 auto;
+                background-color: #ffffff;
+                padding-bottom: 20px;
+                border-radius: 8px;
+                box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            }
+
+            .container .blue_line{
+                display: block;
+                width: 100%;
+                height: 5px;
+                border-radius: 8px;
+                background-color: #3f48cc;
+            }
+
+            .content_container{
+                padding-left: 20px;
+                padding-bottom: 20px;
+                padding-right: 20px;
+            }
+            
+            .container h1{
+                text-align: center;
+                color: #333;
+            }
+
+            .container p{
+                line-height: 1.6;
+                color: #666;
+                margin-top: 30px;
+            }
+
+            .container .button{
+                display: inline-block;
+                padding: 10px 20px;
+                background-color: #3f48cc;
+                color: #fff;
+                text-decoration: none;
+                border-radius: 5px;
+                text-align: center; 
+                width: 100%; 
+                box-sizing: border-box;
+                font-size: 20px;
+                font-weight: 100;
+                letter-spacing: 0.5px;
+                margin-top: 60px;
+            }
+
+            .container .button:hover{
+                background-color: #575fd5;
+            }
+
+            .container .copy_link{
+                line-height: 1.6;
+                color: #999797;
+            }
+
+            .container a{
+                color: #3f48cc;
+                font-size: 15px;
+                text-decoration: none;
+            }
+
+            .container .link{
+                color: #393939;
+                font-size: 15px;
+                text-decoration: underline;
+            }
+            
+          </style>
+    </head>
+
+    <body> 
+        
+        <!-- Main -->
+        <main>
+            <div class="container">
+
+                <div class="blue_line"></div>
+
+                <div class="content_container">
+                    <h1>Confirm Your Email Address</h1>
+                    <p>Hello, {{ user_name }}</p>
+                    <p style="line-height: 1.6; color: #666; margin-top: 30px;">Tap the button below to confirm your email address.<br>If you didn't create email with <a href="http://127.0.0.1:8000/">SmartLib</a>, you can safely forget this email.</p>
+                    <a href="http://{{ domain }}/activate/{{ uid }}/{{ token }}/" class="button">Click to verify email</a>
+                    <br>
+                    <p style="line-height: 1.6; color: #474545; margin-top: 30px;" class="copy_link">If that dosen't work. copy and paste the following link in your browser<br><a class="link" href="http://{{ domain }}/activate/{{ uid }}/{{ token }}/">http://{{ domain }}/activate/{{ uid }}/{{ token }}/</a></p>
+                    <br>
+                    <strong>The SmartLib Team.</strong>
+                </div>
+                
+            </div>
+
+        </main>
+    </body>
+
+</html>    

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/book.css' %}">
+    <title>Books Page-SmartLib</title>
+    <link rel="icon" type="image/png" href="{% static 'images/logo.png' %}">
+
+</head>
+<body>
+    <header>
+        <div class="left-header-container" id="left-header-container">
+
+            <a class="logo" id="logo" href="{% url 'index' %}"><img src='{% static "images/logo.png" %}' width='60' height='60'></a>
+
+        </div>
+
+        <div class="right-header-container" id="right-header-container">
+            
+            <a class="notification" id="notification" href='#'><img id="img_notification" src='{% static "images/empty_notification.png" %}' width='24' height='25'></a>
+            <div class="notification_dropdown" id="notification_dropdown">
+                <h2>Notification</h2>
+                <div id="empty_notification">
+                    <br>
+                    <p>No new notifications.</p>
+                </div>
+                <div id="notEmpty_notification" class="notEmpty_notification">
+                    <div id="notifi-item_1" class="notifi-item">
+                        <img id="notifi-item_image_1" src='{% static "images/notfi_feedback.png" %}' alt="img">
+                        <div class="text">
+                            <h4 id="notifi-item_title_1">Title....</h4>
+                            <p id="notifi-item_content_1">Content...</p>
+                        </div> 
+                    </div>
+                    <div id="notifi-item_2" class="notifi-item">
+                        <img id="notifi-item_image_2" src='{% static "images/notfi_upload.png" %}' alt="img">
+                        <div class="text">
+                            <h4 id="notifi-item_title_2">Title....</h4>
+                            <p id="notifi-item_content_2">Content...</p>
+                        </div> 
+                    </div>
+                    <div id="notifi-item_3" class="notifi-item">
+                        <img id="notifi-item_image_3" src='{% static "images/notfi_upload.png" %}' alt="img">
+                        <div class="text">
+                            <h4 id="notifi-item_title_3">Title....</h4>
+                            <p id="notifi-item_content_3">Content...</p>
+                        </div> 
+                    </div>
+                    <div id="viewAll_notification" class="view-all">
+                        <a href="#">View All Notifications</a>
+                    </div>
+                </div>
+            </div>
+
+            <a class="user" id="user" href='#'><img id="img_user" src='{% static "images/user.png" %}' width='27' height='25'></a>
+            <ul class="dropdown-user" id="dropdown-user">
+                <li onclick="handleOptionClick_user(this, 'Categories Database')">Categories Database</li>
+                <li onclick="handleOptionClick_user(this, 'User Details')">User Details</li>
+                <li onclick="handleOptionClick_user(this, 'View Feedback')">View Feedback</li>
+                <li onclick="handleOptionClick_user(this, 'Notification')">Notification</li>
+                <li onclick="handleOptionClick_user(this, 'Book Section')">Book Section</li>
+                <li onclick="handleOptionClick_user(this, 'Log out')" class="logout">Log Out</li>
+            </ul>
+            
+
+        </div>
+
+</header>
+
+    <!-- Sidebar -->
+    <div class="container">
+        <nav class="sidebar">
+            <button onclick="window.location.href='http://127.0.0.1:8000/adminpanel/categories/'">
+                Categories Database
+            </button>
+            <button onclick="window.location.href='http://127.0.0.1:8000/adminpanel/user-details/'">
+                User Details
+            </button>
+            <button onclick="window.location.href='http://127.0.0.1:8000/adminpanel/feedback/'">
+                View Feedback
+            </button>
+            <button onclick="window.location.href='http://127.0.0.1:8000/adminpanel/notifications/'">
+                Notifications
+            </button>
+            <button onclick="window.location.href='http://127.0.0.1:8000/adminpanel/books/'">
+                Book Section
+            </button>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <h1>Book Section</h1>
+            <br>
+            <!-- Tools Above Table -->
+            <div id="book-management-tools">
+                <input type="text" id="searchInputbook" placeholder="Search by name or status..." oninput="searchBooks()">
+                <button id="searchButton" onclick="toggleSelectBooks()">Select</button>
+                <button class="delete-btn" id="delete-btn-books" onclick="deleteSelectedBooks()" style="display: none;">Delete</button>
+                <button class="insert-btn" id="insert-btn" onclick="openUploadForm()">Upload</button>
+            </div>
+            <style>
+                
+            </style>
+
+            <!-- Book Table -->
+            <div id="book-table-view">
+                <table class="content-table-book">
+                    <thead>
+                        <tr>
+                            <th>Book Name</th>
+                            <th>Author</th>
+                            <th>Barcode</th>
+                            <th>Image</th>
+                            <th>Category</th>
+                            <th>Status</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody id="book-table-body">
+                        <tr>
+                            <td colspan="7">Loading books...</td>
+                        </tr>
+                    </tbody>
+                    
+                </table>
+                <div id="pagination" class="pagination">
+                    <button id="prevPage" onclick="fetchBooks(currentPage - 1)" disabled>Previous</button>
+                    <div id="pageNumbers" class="page-numbers"></div>
+                    <button id="nextPage" onclick="fetchBooks(currentPage + 1)" disabled>Next</button>
+                </div>
+                
+                
+            </div>
+        </main>
+    </div>
+
+    <!-- Upload Book Modal -->
+    <div id="upload-book-container" style="display: none;">
+        <form id="uploadForm" class="upload-form" method="POST" enctype="multipart/form-data" onsubmit="submitForm(event)">
+            <div class="file-upload" id="fileUpload" onclick="triggerFileInput()">
+                <p>Drag & Drop your book file here or click to upload</p>
+                <input type="file" id="fileInput" name="bookfile" accept=".pdf,.epub" onchange="fileSelected(event)" style="display: none;">
+            </div>
+            <p id="fileNameDisplay"></p>
+            <label id="fileSizeLabel" class="max-size">No file selected</label>
+
+            <div class="form-content">
+                <div class="form-left">
+                    <label for="title">Book Title:</label>
+                    <input type="text" id="title" name="title" placeholder="Book Title" required>
+
+                    <label for="author">Author:</label>
+                    <input type="text" id="author" name="author" placeholder="Author Name" required>
+
+                    <label for="category">Category:</label>
+                    <select id="category" name="category" required>
+                        <option value="" disabled selected>Select Category</option>
+                    </select>
+
+                    <label for="barcode">Barcode:</label>
+                    <input type="text" id="barcode" name="barcode" placeholder="Barcode" required>
+                </div>
+
+                <div class="form-right">
+                    <label for="description">Description:</label>
+                    <textarea id="description" name="description" rows="4" placeholder="Add a brief description..." required></textarea>
+                    <div class="input_container">
+                        <label for="imageUpload1">Upload Book Cover:</label>
+                        <div class="image-box" onclick="triggerImageInput('imageUpload1')">
+                            <img id="imagePreview1" style="display: none;" alt="Image Preview">
+                        </div>
+                        <input type="file" id="imageUpload1" name="bookImage" accept=".jpg,.jpeg,.png,.gif" onchange="previewImage(event, 'imagePreview1')" style="display: none;">
+                    </div>
+                </div>
+            </div>
+            <button id="submitBtn" type="submit">Submit</button>
+            <button type="button" class="cancel-btn" onclick="closeUploadForm()">Cancel</button>
+        </form>
+    </div>
+
+    <script src="{% static 'js/book.js' %}"></script>
+</body>
+</html>

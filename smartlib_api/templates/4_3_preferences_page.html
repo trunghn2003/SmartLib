@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartLib-Preferences Page</title>
+    <link rel="stylesheet" href="{% static '4_3_preferences_page/style.css' %}">
+    <link rel="icon" type="image/png" href="{% static 'images/logo.png' %}" sizes="32x32">
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="left-section">
+            <h2>Select Your Preferences</h2>
+            <br><br>
+            <h4>Let's get started!</h4>
+            <br>
+            <h4>What type of books do you like to read?</h4>
+            <br>
+            <div class="preferences">
+                {% for category in Category %}
+                    <div class="card" onclick="toggleCard(this)" preference="{{category.category_id}}">
+                        <h3>{{category.category_name}}</h3>
+                        <input type="radio" name="preference" value="{{category.category_id}}" style="display: none;">
+                    </div>
+                {% endfor %}
+            </div>
+            
+            <p id="selected">Selected: {{selected_num}}0/3 &nbsp; (minimum required: 3)</p>
+            <div class="button-cont">
+                <button id="btn-continue" class="btn-continue">Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static '4_3_preferences_page/script.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
+
+</body>
+</html>

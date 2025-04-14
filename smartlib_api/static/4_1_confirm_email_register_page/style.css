@@ -1,0 +1,152 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* body */
+body{
+    background-color: #c9d6ff;
+    background: linear-gradient(to right, #e2e2e2, #c9d6ff);
+    display: flex;
+    align-items: center; 
+    justify-content: center;
+    flex-direction: column;
+    height: 100vh;
+    margin: 0;
+}
+/*-------------------------------------------------------------*/
+
+/* header */
+header{
+    display: flex;
+    float: left;
+    height: 100px;
+    width: 100%;
+    margin-top: -10px;
+    padding-left: 10px;
+}
+
+.logo{
+    border-radius: 50%;
+    width: 66px;
+    height: 66px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
+    margin-right: 40px;
+    border: 3px solid transparent;
+    background-color: white;
+    transition: border-color 0.3s ease;
+}
+/*-------------------------------------------------------------*/
+
+/* container */
+.container{
+    background-color: #fff;
+    border-radius: 30px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
+    position: relative;
+    overflow: hidden;
+    width: 1100px; /*768px*/
+    max-width: 100%;
+    min-height: 550px; /*480px*/
+}
+
+.container p{
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0.3px;
+    margin: 20px 0;
+}
+
+.container span{
+    font-size: 12px;
+}
+
+.container a{
+    color: #333;
+    font-size: 13px;
+    text-decoration: none;
+    
+}
+
+.container img {
+    width: 220px;
+    height: 220px;
+    
+}
+
+.container button{
+    background-color: #3f48cc;
+    color: #fff;
+    font-size: 12px;
+    padding: 10px 45px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-top: 40px;
+    cursor: pointer;
+}
+
+.container button:hover{
+    background-color: #575fd5;
+}
+
+/*-------------------------------------------------------------*/
+
+/* confirm-email */
+.confirm-email{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.confirm-email h1, .confirm-email p {
+    text-align: left; 
+    width: 100%; 
+    padding-left: 7%; 
+    box-sizing: border-box;
+}
+
+.confirm-email .send_email{
+    color: #333;
+    font-size: 13px;
+    text-decoration: none;
+    cursor: pointer;
+    margin-bottom: 30px;
+}
+
+.confirm-email .another_email_msg{
+    color: #232323;
+    text-decoration: none;
+    font-size: 13px;
+    margin-bottom: 30px;
+}
+
+.hidden {
+    display: none;
+}
+
+
+/*-------------------------------------------------------------*/
+
+/* footer */
+.footer{
+    width: 100%;
+    
+}
+
+
+

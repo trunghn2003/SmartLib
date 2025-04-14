@@ -1,0 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+body{
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #0088d9;
+}
+.about{
+    background: url('/static/images/privacy_policy.png') no-repeat left;
+    background-size: 70%;
+    overflow: hidden;
+    height: 100vh;
+    padding: 100px 0;
+}
+.inner-section {
+    width: 55%;
+    float: right;
+    background-color: #fdfdfd;
+    border-radius: 15px; /* Rounded corners */
+    padding-right: 140px;
+    padding-left: 60px;
+    padding-top: 50px;
+    box-shadow: 10px 10px 8px rgba(63, 72, 204, 0.5); /* Subtle shadow */
+    overflow: hidden; /* Prevent overflow */
+}
+.inner-section h1{
+    margin-bottom: 30px;
+    font-size: 30px;
+    font-weight: 900;
+    color: #0088d9;
+}
+.text{
+    font-size: 18px;
+    color: black;
+    line-height: 30px;
+    text-align: justify;
+    margin-bottom: 30px;
+}
+
+@media screen and (max-width:1400px){
+    .inner-section{
+        padding: 80px;
+    }
+}
+@media screen and (max-width:1000px){
+    .about{
+        background-size: 100%;
+        padding: 100px 40px;
+    }
+    .inner-section{
+        width: 100%;
+    }
+}
+
+@media screen and (max-width:600px){
+    .about{
+        padding: 0;
+    }
+    .inner-section{
+        padding: 60px;
+    }
+    .skills button{
+        font-size: 19px;
+        padding: 5px;
+        width: 160px;
+    }
+}

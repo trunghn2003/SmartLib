@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">        
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static '5_1_find_account_forgetPass_page/style.css' %}">
+    <link rel="icon" type="image/png" href="{% static 'images/logo.png' %}">
+    <title>SmartLib-Find Account</title>
+</head>
+
+<body> 
+
+    <!-- Header -->
+    <header>
+        <a class="logo" id="logo" href="{% url 'loginPage' %}"><img src="{% static 'images/logo.png' %}" width="60" height="60"></a>
+    </header>
+
+   
+
+    <!-- Main -->
+    <main>
+        <div class="container" id="container">
+            
+            <div class="find-email" id="find-email">
+                <h1>Find your account</h1>
+                <p>Please enter your email to search for your account.</p>
+                <br>
+                
+                <form method="POST" id="find-email-form" action="#" method="POST">
+                    <input id="email" type="email" name="email" placeholder="Email" required>
+                </form>
+                <p id="error" class="error">Please fill the field.</p>
+            </div>
+
+            <hr class="divider">
+
+            <div class="buttons" id="buttons">
+
+                <a href="{% url 'loginPage' %}">
+                    <button class="cancel" type="button">Cancel</button>
+                </a>
+
+                <button id="search_btn" class="search" type="submit" form="find-email-form">Search</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Script -->
+    <script src="{% static '5_1_find_account_forgetPass_page/script.js' %}"></script>
+    <br>
+    <br>
+    <!-- Footer -->
+    <footer>
+        <p>Copyright &copy; 2025 SmartLib. All Rights Reserved.</p>
+    </footer>
+
+</body>
+</html>
+<!-- done -->
