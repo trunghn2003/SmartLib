@@ -200,7 +200,7 @@ def deactivate_reader(request, user_id):
         return JsonResponse({"status": "error", "message": str(e)}, status=500)
 
 
-# search for user (reader)
+# search for user (reader) chua co
 def search_users(request):
     query = request.GET.get("query", "").strip()
     readers = Reader.objects.select_related('user')
@@ -222,6 +222,7 @@ def search_users(request):
 
 @csrf_exempt
 @require_http_methods(["POST"])
+#chua co
 def update_reader(request):
     try:
         data = json.loads(request.body)
