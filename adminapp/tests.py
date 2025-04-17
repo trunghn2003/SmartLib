@@ -35,7 +35,11 @@ class IndexViewTests(TestCase):
         self.middleware = SessionMiddleware(lambda request: None)
 
     def test_index_with_manager_logged_in(self):
-        """Kiểm tra hàm index khi manager đã đăng nhập"""
+
+        """Kiểm tra hàm index khi manager đã đăng nhập
+            Mã testcase: UT-INDEX-02
+
+        """
         # Thiết lập session để giả lập manager đã đăng nhập
         session = self.client.session
         session['manager_id'] = self.user.user_id
@@ -46,7 +50,9 @@ class IndexViewTests(TestCase):
         self.assertTemplateUsed(response, 'homepage/index.html')
 
     def test_index_without_login_redirects(self):
-        """Kiểm tra hàm index khi không đăng nhập sẽ chuyển hướng"""
+        """Kiểm tra hàm index khi không đăng nhập sẽ chuyển hướng
+            Mã testcase: UT-INDEX-02
+        """
         response = self.client.get(reverse('index'))
         self.assertNotEqual(response.status_code, 200)
         # Dự kiến sẽ có chuyển hướng tới trang login
@@ -79,7 +85,9 @@ class CategoriesViewTests(TestCase):
         self.factory = RequestFactory()
 
     def test_categories_with_manager_logged_in(self):
-        """Kiểm tra hàm categories khi manager đã đăng nhập"""
+        """Kiểm tra hàm categories khi manager đã đăng nhập
+            Mã testcase: UT-CAT-01
+        """
         # Thiết lập session để giả lập manager đã đăng nhập
         session = self.client.session
         session['manager_id'] = self.user.user_id
@@ -92,7 +100,9 @@ class CategoriesViewTests(TestCase):
         self.assertEqual(len(response.context['categories']), 2)
 
     def test_categories_without_login_redirects(self):
-        """Kiểm tra hàm categories khi không đăng nhập sẽ chuyển hướng"""
+        """Kiểm tra hàm categories khi không đăng nhập sẽ chuyển hướng
+            Mã testcase: UT-CAT-02
+        """
         response = self.client.get(reverse('categories'))
         self.assertNotEqual(response.status_code, 200)
         self.assertEqual(response.status_code, 302)
@@ -181,7 +191,9 @@ class DeleteCategoriesTests(TestCase):
         self.category2 = Category.objects.create(category_name="Science")
 
     def test_delete_categories_success(self):
-        """Kiểm tra xóa category thành công"""
+        """Kiểm tra xóa category thành công
+            mã testcase: UT-DEL-CAT-01
+        """
         data = {'category_ids': [self.category1.category_id]}
         response = self.client.post(
             reverse('delete_categories'),
@@ -195,7 +207,9 @@ class DeleteCategoriesTests(TestCase):
         self.assertTrue(Category.objects.filter(category_id=self.category2.category_id).exists())
 
     def test_delete_categories_no_ids(self):
-        """Kiểm tra xóa category không có ID sẽ báo lỗi"""
+        """Kiểm tra xóa category không có ID sẽ báo lỗi
+            mã testcase: UT-DEL-CAT-02
+        """
         data = {'category_ids': []}
         response = self.client.post(
             reverse('delete_categories'),
@@ -208,7 +222,9 @@ class DeleteCategoriesTests(TestCase):
         self.assertIn('No categories selected', response_data['message'])
 
     def test_delete_categories_exception_handling(self):
-        """Kiểm tra xử lý ngoại lệ khi xóa category"""
+        """Kiểm tra xử lý ngoại lệ khi xóa category
+            mã testcase: UT-DEL-CAT-03
+        """
         # Tạo request với dữ liệu JSON không hợp lệ
         response = self.client.post(
             reverse('delete_categories'),
@@ -273,7 +289,9 @@ class FeedbackViewTests(TestCase):
         self.factory = RequestFactory()
 
     def test_feedback_with_manager_logged_in(self):
-        """Kiểm tra hàm feedback khi manager đã đăng nhập"""
+        """Kiểm tra hàm feedback khi manager đã đăng nhập
+            mã testcase: UT-FEED-01
+        """
         # Thiết lập session để giả lập manager đã đăng nhập
         session = self.client.session
         session['manager_id'] = self.user.user_id
@@ -286,7 +304,9 @@ class FeedbackViewTests(TestCase):
         self.assertEqual(len(response.context['feedbacks']), 2)
 
     def test_feedback_ajax_request(self):
-        """Kiểm tra hàm feedback với AJAX request"""
+        """Kiểm tra hàm feedback với AJAX request
+            mã testcase: UT-FEED-02
+        """
         # Thiết lập session để giả lập manager đã đăng nhập
         session = self.client.session
         session['manager_id'] = self.user.user_id
@@ -378,7 +398,9 @@ class AddUserTests(TestCase):
         )
 
     def test_add_user_success(self):
-        """Kiểm tra thêm user thành công"""
+        """Kiểm tra thêm user thành công
+            Mã testcase: UT-ADD-USER-01
+        """
         data = {
             'user_name': 'newuser',
             'email': 'newuser@example.com',
@@ -420,7 +442,9 @@ class AddUserTests(TestCase):
         self.assertIn('Email already exists', response_data['message'])
 
     def test_add_user_missing_fields(self):
-        """Kiểm tra thêm user thiếu trường thông tin sẽ báo lỗi"""
+        """Kiểm tra thêm user thiếu trường thông tin sẽ báo lỗi
+            Mã testcase: UT-ADD-USER-02
+        """
         data = {
             'user_name': '',
             'email': 'incomplete@example.com',
@@ -437,7 +461,9 @@ class AddUserTests(TestCase):
         self.assertIn('Missing required fields', response_data['message'])
 
     def test_add_user_exception_handling(self):
-        """Kiểm tra xử lý ngoại lệ khi thêm user"""
+        """Kiểm tra xử lý ngoại lệ khi thêm user
+            Mã testcase: UT-ADD-USER-03
+        """
         # Tạo request với dữ liệu JSON không hợp lệ
         response = self.client.post(
             reverse('add_user'),
@@ -481,7 +507,9 @@ class DeactivateReaderTests(TestCase):
         )
 
     def test_deactivate_reader_success(self):
-        """Kiểm tra vô hiệu hóa reader thành công"""
+        """Kiểm tra vô hiệu hóa reader thành công
+            Mã testcase: UT-DEACTIVATE-01
+        """
         response = self.client.post(reverse('deactivate_reader', args=[self.user.user_id]))
         self.assertEqual(response.status_code, 200)
         response_data = json.loads(response.content)
@@ -499,7 +527,9 @@ class DeactivateReaderTests(TestCase):
         self.assertTrue(reader.is_first_time)
 
     def test_deactivate_reader_not_found(self):
-        """Kiểm tra vô hiệu hóa reader không tồn tại"""
+        """Kiểm tra vô hiệu hóa reader không tồn tại
+            Mã testcase: UT-DEACTIVATE-02
+        """
         # Try to deactivate a non-existent user
         response = self.client.post(reverse('deactivate_reader', args=[9999]))  # ID không tồn tại
         self.assertEqual(response.status_code, 404)
@@ -510,6 +540,7 @@ class DeactivateReaderTests(TestCase):
         """
         Kiểm tra khi user tồn tại nhưng không có reader
         Đảm bảo đoạn except Reader.DoesNotExist được chạy
+        mã testcase: UT-DEACTIVATE-03
         """
         # Tạo user mới không có reader
         user_without_reader = User.objects.create(
@@ -581,6 +612,7 @@ class SearchUsersViewTests(TestCase):
 
     def test_search_without_query(self):
         # Test với trường hợp không có query: trả về tất cả các Reader theo phân trang
+        # mã testcase: UT-SEARCH-01
         response = self.client.get(reverse('search_users'))
         self.assertEqual(response.status_code, 200)
 
@@ -668,12 +700,14 @@ class UpdateReaderViewTests(TestCase):
 
     def add_session_to_request(self, request):
         # Thêm session cho request nếu cần
+        # mã testcase: UT-UPDATE-01
         middleware = SessionMiddleware(lambda req: None)
         middleware.process_request(request)
         request.session.save()
 
     def test_invalid_json_payload(self):
         # Test trường hợp payload không phải JSON hợp lệ
+        # Mã testcase: UT-UPDATE-02
         request = self.factory.post('/update_reader', data="invalid json", content_type='application/json')
         self.add_session_to_request(request)
         response = update_reader(request)
@@ -683,6 +717,7 @@ class UpdateReaderViewTests(TestCase):
 
     def test_missing_parameters(self):
         # Test khi thiếu các tham số cần thiết (reader_id, field, value)
+        # Mã testcase: UT-UPDATE-03
         payload = json.dumps({
             # Không truyền reader_id, field hoặc value
             'reader_id': self.reader.user_id,
@@ -698,6 +733,7 @@ class UpdateReaderViewTests(TestCase):
 
     def test_update_valid_reader_rank(self):
         # Test cập nhật trường reader_rank với giá trị hợp lệ
+        # Mã testcase: UT-UPDATE-04
         payload = json.dumps({
             'reader_id': self.reader.user_id,
             'field': 'reader_rank',
@@ -715,6 +751,7 @@ class UpdateReaderViewTests(TestCase):
 
     def test_update_invalid_reader_rank(self):
         # Test cập nhật reader_rank với giá trị không hợp lệ
+        # Mã testcase: UT-UPDATE-05
         payload = json.dumps({
             'reader_id': self.reader.user_id,
             'field': 'reader_rank',
@@ -730,6 +767,7 @@ class UpdateReaderViewTests(TestCase):
 
     def test_update_valid_reader_point(self):
         # Test cập nhật reader_point với giá trị int hợp lệ
+        # Mã testcase: UT-UPDATE-06
         payload = json.dumps({
             'reader_id': self.reader.user_id,
             'field': 'reader_point',
@@ -747,6 +785,7 @@ class UpdateReaderViewTests(TestCase):
 
     def test_update_invalid_reader_point(self):
         # Test cập nhật reader_point với giá trị không phải số nguyên
+        # Mã testcase: UT-UPDATE-07
         payload = json.dumps({
             'reader_id': self.reader.user_id,
             'field': 'reader_point',
@@ -763,6 +802,7 @@ class UpdateReaderViewTests(TestCase):
     def test_update_valid_user_fields(self):
         # Test cập nhật trường thuộc đối tượng user, ví dụ user_name và email
         # Cập nhật user_name
+        # Mã testcase: UT-UPDATE-08
         payload = json.dumps({
             'reader_id': self.reader.user_id,
             'field': 'user_name',
@@ -793,6 +833,7 @@ class UpdateReaderViewTests(TestCase):
 
     def test_update_invalid_is_active(self):
         # Test cập nhật is_active với giá trị không đúng định dạng (không phải boolean hay chuỗi 'true'/'false')
+        # Mã testcase: UT-UPDATE-09
         payload = json.dumps({
             'reader_id': self.reader.user_id,
             'field': 'is_active',
@@ -808,6 +849,7 @@ class UpdateReaderViewTests(TestCase):
 
     def test_update_invalid_field(self):
         # Test gửi update cho field không hợp lệ, ngoài các trường cho phép
+        # Mã testcase: UT-UPDATE-10
         payload = json.dumps({
             'reader_id': self.reader.user_id,
             'field': 'unknown_field',
@@ -823,6 +865,7 @@ class UpdateReaderViewTests(TestCase):
     def test_database_error(self):
             """Test lỗi 500 khi có lỗi cơ sở dữ liệu"""
             # Sử dụng mock để ép buộc Reader.objects.get gây ra exception
+            # mã testcase: UT-UPDATE-11
             with patch('smartlib_api.models.Reader.objects.get') as mock_get:
                 # Giả lập lỗi cơ sở dữ liệu nghiêm trọng
                 mock_get.side_effect = Exception("Database connection failed")
@@ -845,6 +888,7 @@ class UpdateReaderViewTests(TestCase):
 
     def test_division_by_zero_error(self):
             """Test lỗi 500 khi có exception chia cho 0"""
+            # mã testcase: UT-UPDATE-12
             # Tạo một function mới để thay thế hàm update_reader gốc
             def mock_update_reader_with_error(request):
                 # Cố tình gây ra ZeroDivisionError
@@ -874,6 +918,7 @@ class UpdateReaderViewTests(TestCase):
 
     def test_index_error(self):
             """Test lỗi 500 khi có IndexError"""
+            # mã testcase: UT-UPDATE-13
             # Patch hàm categories_data để gây ra IndexError
             with patch('adminapp.views.categories_data') as mock_categories:
                 # Giả lập lỗi truy cập index không tồn tại
@@ -887,6 +932,7 @@ class UpdateReaderViewTests(TestCase):
 
     def test_keyerror_in_json_processing(self):
         """Test lỗi 500 khi xử lý JSON gây KeyError"""
+        # Mã testcase: UT-UPDATE-14
         # Patch hàm json.loads để gây ra KeyError
         original_loads = json.loads
 
@@ -909,6 +955,7 @@ class UpdateReaderViewTests(TestCase):
             self.assertEqual(response.status_code, 500)
         """Test lỗi 500 khi view gây ra exception không được xử lý"""
         # Tạo một view đặc biệt gây ra exception
+        # mã testcase: UT-UPDATE-15
         def error_view(request):
             # Chia cho 0 sẽ gây ra ZeroDivisionError
             1/0
@@ -1189,13 +1236,17 @@ class BookListTests(TestCase):
         session.save()
 
     def test_book_list_page(self):
-        """Kiểm tra trang danh sách sách"""
+        """Kiểm tra trang danh sách sách
+            mã testcase: UT-BOOKLIST-01
+        """
         response = self.client.get(reverse('book_list'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'books/books.html')
 
     def test_get_books_default(self):
-        """Kiểm tra lấy danh sách sách mặc định"""
+        """Kiểm tra lấy danh sách sách mặc định
+            mã testcase: UT-BOOKLIST-02
+        """
         response = self.client.get(reverse('get_books'))
         self.assertEqual(response.status_code, 200)
         response_data = json.loads(response.content)
@@ -1203,21 +1254,27 @@ class BookListTests(TestCase):
         self.assertEqual(len(response_data['books']), 3)  # Tất cả sách
 
     def test_get_books_filter_by_status(self):
-        """Kiểm tra lọc sách theo trạng thái"""
+        """Kiểm tra lọc sách theo trạng thái
+            mã testcase: UT-BOOKLIST-03
+        """
         response = self.client.get(f"{reverse('get_books')}?status=Accepted")
         self.assertEqual(response.status_code, 200)
         response_data = json.loads(response.content)
         self.assertEqual(len(response_data['books']), 1)  # Chỉ 1 sách Accepted
 
     def test_get_books_search(self):
-        """Kiểm tra tìm kiếm sách"""
+        """Kiểm tra tìm kiếm sách
+            mã testcase: UT-BOOKLIST-04
+        """
         response = self.client.get(f"{reverse('get_books')}?search=Accepted")
         self.assertEqual(response.status_code, 200)
         response_data = json.loads(response.content)
         self.assertEqual(len(response_data['books']), 3)  # Chỉ 1 sách có từ "Accepted"
 
     def test_get_books_pagination(self):
-        """Kiểm tra phân trang danh sách sách"""
+        """Kiểm tra phân trang danh sách sách
+            mã testcase: UT-BOOKLIST-05
+        """
         response = self.client.get(f"{reverse('get_books')}?page=1&limit=2")
         self.assertEqual(response.status_code, 200)
         response_data = json.loads(response.content)
@@ -1226,7 +1283,9 @@ class BookListTests(TestCase):
         self.assertIn('current_page', response_data)
 
     def test_get_books_sort(self):
-        """Kiểm tra sắp xếp sách"""
+        """Kiểm tra sắp xếp sách
+            mã testcase: UT-BOOKLIST-06
+        """
         response = self.client.get(f"{reverse('get_books')}?sort=book_name")
         self.assertEqual(response.status_code, 200)
         response_data = json.loads(response.content)
@@ -1259,7 +1318,9 @@ class GetBooksTests(TestCase):
             )
 
     def test_get_books_default_pagination(self):
-        """Kiểm tra lấy danh sách sách với phân trang mặc định"""
+        """Kiểm tra lấy danh sách sách với phân trang mặc định
+            mã testcase: UT-BOOKLIST-01
+        """
         response = self.client.get(reverse('get_books'))
         self.assertEqual(response.status_code, 200)
         response_data = json.loads(response.content)
@@ -1276,7 +1337,9 @@ class GetBooksTests(TestCase):
         self.assertEqual(response_data['current_page'], 1)  # Trang hiện tại là 1
 
     def test_get_books_custom_pagination(self):
-        """Kiểm tra lấy danh sách sách với phân trang tùy chỉnh"""
+        """Kiểm tra lấy danh sách sách với phân trang tùy chỉnh
+            mã testcase: UT-BOOKLIST-02
+        """
         response = self.client.get(f"{reverse('get_books')}?page=2&limit=2")
         self.assertEqual(response.status_code, 200)
         response_data = json.loads(response.content)
@@ -1329,7 +1392,9 @@ class BookManagementTests(TestCase):
         )
 
     def test_add_book_success(self):
-        """Kiểm tra thêm sách thành công"""
+        """Kiểm tra thêm sách thành công
+            mã testcase: UT-BOOKMANAGE-01
+        """
         data = {
             'book_name': 'New Test Book',
             'book_author': 'Test Author',
@@ -1346,7 +1411,9 @@ class BookManagementTests(TestCase):
         # self.assertTrue(Book.objects.filter(book_name='New Test Book').exists())
 
     def test_add_book_missing_required_fields(self):
-        """Kiểm tra thêm sách thiếu thông tin bắt buộc"""
+        """Kiểm tra thêm sách thiếu thông tin bắt buộc
+            mã testcase: UT-BOOKMANAGE-02
+        """
         data = {
             'book_name': 'Test Book',
             # Thiếu author và category
@@ -1358,7 +1425,9 @@ class BookManagementTests(TestCase):
         self.assertEqual(response_data['status'], 'error')
 
     def test_add_book_duplicate_barcode(self):
-        """Kiểm tra thêm sách với barcode trùng lặp"""
+        """Kiểm tra thêm sách với barcode trùng lặp
+            mã testcase: UT-BOOKMANAGE-03
+            """
         # Tạo sách đầu tiên
         Book.objects.create(
             book_name='First Book',
@@ -1380,7 +1449,9 @@ class BookManagementTests(TestCase):
         self.assertEqual(response_data['status'], 'error')
 
     def test_delete_book_not_found(self):
-        """Kiểm tra xóa sách không tồn tại"""
+        """Kiểm tra xóa sách không tồn tại
+            mã testcase: UT-BOOKMANAGE-04
+        """
         response = self.client.delete(reverse('delete_book', args=[9999]))
         # Chấp nhận cả 404 và 500 vì view có thể trả về 500 khi không tìm thấy sách
         self.assertIn(response.status_code, [404, 500])
@@ -1388,7 +1459,9 @@ class BookManagementTests(TestCase):
         self.assertEqual(response_data['status'], 'error')
 
     def test_delete_book_success(self):
-        """Kiểm tra xóa sách thành công"""
+        """Kiểm tra xóa sách thành công
+            mã testcase: UT-BOOKMANAGE-05
+        """
         # Tạo sách để xóa
         book = Book.objects.create(
             book_name='Test Book',
@@ -1404,7 +1477,9 @@ class BookManagementTests(TestCase):
         self.assertFalse(Book.objects.filter(book_id=book.book_id).exists())
 
     def test_update_book_invalid_data(self):
-        """Kiểm tra cập nhật sách với dữ liệu không hợp lệ"""
+        """Kiểm tra cập nhật sách với dữ liệu không hợp lệ
+            mã testcase: UT-BOOKMANAGE-06
+        """
         # Tạo sách test
         book = Book.objects.create(
             book_name='Test Book',
@@ -1430,7 +1505,9 @@ class BookManagementTests(TestCase):
         self.assertIn(response_data['status'], ['success', 'error'])
 
     def test_update_book_not_found(self):
-        """Kiểm tra cập nhật sách không tồn tại"""
+        """Kiểm tra cập nhật sách không tồn tại
+            mã testcase: UT-BOOKMANAGE-07
+        """
         data = {
             'book_name': 'Updated Book',
             'book_author': 'Updated Author'
@@ -1446,7 +1523,9 @@ class BookManagementTests(TestCase):
         self.assertEqual(response_data['status'], 'error')
 
     def test_update_book_success(self):
-        """Kiểm tra cập nhật sách thành công"""
+        """Kiểm tra cập nhật sách thành công
+            mã testcase: UT-BOOKMANAGE-08
+        """
         # Tạo sách test
         book = Book.objects.create(
             book_name='Test Book',
@@ -1475,7 +1554,9 @@ class BookManagementTests(TestCase):
         self.assertEqual(updated_book.book_author, 'Updated Author')
 
     def test_update_book_invalid_method(self):
-        """Kiểm tra cập nhật sách với phương thức không hợp lệ"""
+        """Kiểm tra cập nhật sách với phương thức không hợp lệ
+            mã testcase: UT-BOOKMANAGE-09
+        """
         # Tạo sách test
         book = Book.objects.create(
             book_name='Test Book',
@@ -1491,7 +1572,9 @@ class BookManagementTests(TestCase):
         self.assertEqual(response_data['status'], 'error')
 
     def test_delete_book_invalid_method(self):
-        """Kiểm tra xóa sách với phương thức không hợp lệ"""
+        """Kiểm tra xóa sách với phương thức không hợp lệ
+            mã testcase: UT-BOOKMANAGE-10
+        """
         # Tạo sách test
         book = Book.objects.create(
             book_name='Test Book',
@@ -1507,7 +1590,9 @@ class BookManagementTests(TestCase):
         self.assertEqual(response_data['status'], 'error')
 
     def test_add_book_invalid_method(self):
-        """Kiểm tra thêm sách với phương thức không hợp lệ"""
+        """Kiểm tra thêm sách với phương thức không hợp lệ
+            mã testcase: UT-BOOKMANAGE-11
+        """
         # Gửi request với phương thức GET
         response = self.client.get(reverse('add_book'))
         self.assertEqual(response.status_code, 405)
@@ -1515,7 +1600,9 @@ class BookManagementTests(TestCase):
         self.assertEqual(response_data['status'], 'error')
 
     def test_add_book_invalid_category(self):
-        """Test adding a book with invalid category ID"""
+        """Test adding a book with invalid category ID
+            mã testcase: UT-BOOKMANAGE-12
+        """
         response = self.client.post(reverse('add_book'), {
             'book_name': 'Test Book',
             'author': 'Test Author',
@@ -1527,7 +1614,9 @@ class BookManagementTests(TestCase):
         self.assertEqual(response_data['status'], 'error')
 
     def test_add_book_invalid_file_type(self):
-        """Test adding a book with invalid file type"""
+        """Test adding a book with invalid file type
+        mã  testcase: UT-BOOKMANAGE-13
+        """
         with open('test.txt', 'w') as f:
             f.write('test content')
         with open('test.txt', 'rb') as f:
@@ -1544,7 +1633,9 @@ class BookManagementTests(TestCase):
         os.remove('test.txt')
 
     def test_update_book_invalid_category(self):
-        """Test updating a book with invalid category ID"""
+        """Test updating a book with invalid category ID
+            mã testcase: UT-BOOKMANAGE-14
+        """
         response = self.client.patch(
             reverse('update_book', args=[self.book.book_id]),
             data=json.dumps({'category': '999'}),
@@ -1555,7 +1646,8 @@ class BookManagementTests(TestCase):
         self.assertEqual(response_data['status'], 'error')
 
     def test_delete_book_with_dependencies(self):
-        """Test deleting a book that has dependencies (e.g., feedback)"""
+        """Test deleting a book that has dependencies (e.g., feedback)
+        ma testcase: UT-BOOKMANAGE-15"""
         # Create feedback for the book
         reader_user = User.objects.create(
             user_name='reader',
@@ -1577,7 +1669,9 @@ class BookManagementTests(TestCase):
         self.assertEqual(response_data['status'], 'success')
 
     def test_update_book_with_invalid_json(self):
-        """Test updating a book with invalid JSON data"""
+        """Test updating a book with invalid JSON data
+            mã testcase: UT-BOOKMANAGE-16
+        """
         response = self.client.patch(
             reverse('update_book', args=[self.book.book_id]),
             data='invalid json',
@@ -1638,7 +1732,9 @@ class UpdateBookStatusTests(TestCase):
         )
 
     def test_update_book_status_to_accepted(self):
-        """Kiểm tra cập nhật trạng thái sách thành Accepted"""
+        """Kiểm tra cập nhật trạng thái sách thành Accepted
+            mã testcase:UT-BOOKSTATUS-01
+        """
         data = {
             'status': 'Accepted'
         }
@@ -1668,7 +1764,9 @@ class UpdateBookStatusTests(TestCase):
         )
 
     def test_update_book_status_to_rejected(self):
-        """Kiểm tra cập nhật trạng thái sách thành Rejected"""
+        """Kiểm tra cập nhật trạng thái sách thành Rejected
+            mã testcase:UT-BOOKSTATUS-02
+        """
         data = {
             'status': 'Rejected'
         }
@@ -1697,7 +1795,9 @@ class UpdateBookStatusTests(TestCase):
         )
 
     def test_update_book_status_invalid_status(self):
-        """Kiểm tra cập nhật với trạng thái không hợp lệ"""
+        """Kiểm tra cập nhật với trạng thái không hợp lệ
+            mã testcase:UT-BOOKSTATUS-03
+        """
         data = {
             'status': 'InvalidStatus'  # Trạng thái không hợp lệ
         }
@@ -1716,7 +1816,9 @@ class UpdateBookStatusTests(TestCase):
         self.assertEqual(updated_book.status, 'Pending')
 
     def test_update_book_status_not_found(self):
-        """Kiểm tra cập nhật trạng thái sách không tồn tại"""
+        """Kiểm tra cập nhật trạng thái sách không tồn tại
+            mã testcase:UT-BOOKSTATUS-04
+        """
         data = {
             'status': 'Accepted'
         }
@@ -1731,7 +1833,9 @@ class UpdateBookStatusTests(TestCase):
         self.assertEqual(response_data['error'], 'Book not found')
 
     def test_update_book_status_without_uploaded_book(self):
-        """Kiểm tra trường hợp sách không có trong UploadedBook"""
+        """Kiểm tra trường hợp sách không có trong UploadedBook
+            mã testcase:UT-BOOKSTATUS-05
+        """
         # Tạo sách mới không liên kết với UploadedBook
         book_without_upload = Book.objects.create(
             book_name="Book Without Upload",
@@ -1767,7 +1871,9 @@ class UpdateBookStatusTests(TestCase):
         self.assertEqual(notification_count, 0)
 
     def test_update_book_status_invalid_json(self):
-        """Kiểm tra trường hợp dữ liệu JSON không hợp lệ"""
+        """Kiểm tra trường hợp dữ liệu JSON không hợp lệ
+            mã testcase:UT-BOOKSTATUS-06
+        """
         response = self.client.patch(
             reverse('update_book_status', args=[self.book.book_id]),
             data="invalid json",
@@ -1778,7 +1884,9 @@ class UpdateBookStatusTests(TestCase):
         self.assertIn('error', response_data)
 
     def test_update_book_status_invalid_method(self):
-        """Kiểm tra phương thức không hợp lệ (không phải PATCH)"""
+        """Kiểm tra phương thức không hợp lệ (không phải PATCH)
+            mã testcase:UT-BOOKSTATUS-07
+            """
         data = {
             'status': 'Accepted'
         }
@@ -1791,7 +1899,9 @@ class UpdateBookStatusTests(TestCase):
         self.assertEqual(response.status_code, 405)
 
     def test_exception_handling(self):
-        """Kiểm tra xử lý ngoại lệ"""
+        """Kiểm tra xử lý ngoại lệ
+            mã testcase:UT-BOOKSTATUS-08
+        """
         # Sử dụng mock để tạo ra một exception khi gọi Book.objects.get
         with patch('smartlib_api.models.Book.objects.get') as mock_get:
             mock_get.side_effect = Exception("Test exception")
