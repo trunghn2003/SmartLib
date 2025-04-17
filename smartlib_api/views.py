@@ -123,75 +123,79 @@ class UserLoginView(APIView):
         email = request.data.get('email')
         user_password = request.data.get('user_password')
 
-
         try:
             # Retrieve the user by email
             user = User.objects.get(email=email)
 
             # Verify the password using bcrypt
             if not bcrypt.checkpw(user_password.encode('utf-8'), user.user_password.encode('utf-8')):
-                raise AuthenticationFailed("Incorrect password!", status=status.HTTP_401_UNAUTHORIZED)
-            else:
-                if user.is_active:
-                    payload = {
-                        'id': user.user_id,
-                        'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=180), # 3 hours
-                        'iat': datetime.datetime.utcnow()
-                    }
+                return Response(
+                    {"detail": "Incorrect password!"}, 
+                    status=status.HTTP_401_UNAUTHORIZED
+                )
+            
+            if not user.is_active:
+                return Response(
+                    {"detail": "Your account has not activated yet."}, 
+                    status=status.HTTP_401_UNAUTHORIZED
+                )
 
-                    token = jwt.encode(payload, 'secret', algorithm='HS256')
+            payload = {
+                'id': user.user_id,
+                'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=180), # 3 hours
+                'iat': datetime.datetime.utcnow()
+            }
 
-                    # Get current date without time
-                    current_date = now()
-                    last_login_date = user.last_login if user.last_login else None
+            token = jwt.encode(payload, 'secret', algorithm='HS256')
 
-                    isDailyLogin = False
+            # Get current date without time
+            current_date = now()
+            last_login_date = user.last_login if user.last_login else None
 
-                    # Find the Reader entry for this user
-                    reader = Reader.objects.get(user_id=user.user_id)
+            isDailyLogin = False
 
-                    if (current_date != last_login_date) or (reader.is_first_time==True):
-                        isDailyLogin = True
+            # Find the Reader entry for this user
+            reader = Reader.objects.get(user_id=user.user_id)
 
-                        # Update reader points
-                        reader.reader_point += 10
-                        if(reader.reader_point>=500 and reader.reader_point<1500):
-                            reader.reader_rank="Bronze"
-                        elif(reader.reader_point>=1500 and reader.reader_point<3000):
-                            reader.reader_rank="Silver"
-                        elif(reader.reader_point>=3000):
-                            reader.reader_rank="Gold"
+            if (current_date != last_login_date) or (reader.is_first_time==True):
+                isDailyLogin = True
+                # Update reader points
+                reader.reader_point += 10
+                if(reader.reader_point>=500 and reader.reader_point<1500):
+                    reader.reader_rank="Bronze"
+                elif(reader.reader_point>=1500 and reader.reader_point<3000):
+                    reader.reader_rank="Silver"
+                elif(reader.reader_point>=3000):
+                    reader.reader_rank="Gold"
 
-                        reader.save()
+                reader.save()
 
+                # Insert new gamification record
+                Gamification_Record.objects.create(
+                    reader_id=reader.reader_id,
+                    gamification_description="Daily login",
+                    achieved_point=10
+                )
 
-                        # Insert new gamification record
-                        Gamification_Record.objects.create(
-                            reader_id=reader.reader_id,
-                            gamification_description="Daily login",
-                            achieved_point=10
-                        )
+                Notification.objects.create(
+                    reader_id=reader.reader_id,
+                    manager_id=2,
+                    notification_record="+10 Point for Daily login",
+                    notification_title="New Point Achievement"
+                )
 
-                        Notification.objects.create(
-                            reader_id=reader.reader_id,
-                            manager_id=2,
-                            notification_record="+10 Point for Daily login",
-                            notification_title="New Point Achievement"
-                        )
+            #Update last_login timestamp
+            user.last_login = now()
+            user.save(update_fields=['last_login'])
+            user.refresh_from_db()
 
-
-                    #Update last_login timestamp
-                    user.last_login = now()
-                    user.save(update_fields=['last_login'])  # Ensure last_login is updated
-                    user.refresh_from_db()
-
-                    return Response({'jwt': token, 'isDailyLogin': isDailyLogin}, status=status.HTTP_200_OK)
-                else:
-                    raise AuthenticationFailed("Your account has not activated yet.", status=status.HTTP_401_UNAUTHORIZED)
+            return Response({'jwt': token, 'isDailyLogin': isDailyLogin}, status=status.HTTP_200_OK)
 
         except User.DoesNotExist:
-            print(User.objects.all())
-            raise AuthenticationFailed("User not found or incorrect password!", status=status.HTTP_401_UNAUTHORIZED)
+            return Response(
+                {"detail": "User not found or incorrect password!"}, 
+                status=status.HTTP_401_UNAUTHORIZED
+            )
 
 
 
@@ -200,14 +204,21 @@ class RefreshTokenView(APIView):
         token = request.data.get("token")
 
         if not token:
-            raise AuthenticationFailed("Token is required!", status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"detail": "Token is required!"}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
         try:
-            payload = jwt.decode(token, 'secret', algorithms=['HS256'], options={"verify_exp": False})
+            # Remove the verify_exp=False option to properly check token expiration
+            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
             user = User.objects.get(user_id=payload['id'])
 
             if not user.is_active:
-                raise AuthenticationFailed("Your account is not active.", status=status.HTTP_401_UNAUTHORIZED)
+                return Response(
+                    {"detail": "Your account is not active."}, 
+                    status=status.HTTP_401_UNAUTHORIZED
+                )
 
             # Generate new token
             new_payload = {
@@ -220,11 +231,20 @@ class RefreshTokenView(APIView):
             return Response({'jwt': new_token}, status=status.HTTP_200_OK)
 
         except jwt.ExpiredSignatureError:
-            raise AuthenticationFailed("Token has expired!", status=status.HTTP_401_UNAUTHORIZED)
+            return Response(
+                {"detail": "Token has expired!"}, 
+                status=status.HTTP_401_UNAUTHORIZED
+            )
         except jwt.InvalidTokenError:
-            raise AuthenticationFailed("Invalid token!", status=status.HTTP_401_UNAUTHORIZED)
+            return Response(
+                {"detail": "Invalid token!"}, 
+                status=status.HTTP_401_UNAUTHORIZED
+            )
         except User.DoesNotExist:
-            raise AuthenticationFailed("User not found!", status=status.HTTP_401_UNAUTHORIZED)
+            return Response(
+                {"detail": "User not found!"}, 
+                status=status.HTTP_401_UNAUTHORIZED
+            )
 
 #--------------------------------------------------------------------------------------------
 
