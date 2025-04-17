@@ -660,7 +660,7 @@ class RegisterEmailVerificationTest(TestCase):
 
 class BookSearchViewTest(APITestCase):
     """Test cases for BookSearchView"""
-    
+
     def setUp(self):
         """Set up test data"""
         # Create test categories
@@ -671,6 +671,7 @@ class BookSearchViewTest(APITestCase):
         self.book1 = Book.objects.create(
             book_name="Test History Book",
             book_author="Author 1",
+            book_barcode="123456789",
             book_type="History",
             category=self.category1,
             book_rating_avg=4.5,
@@ -683,6 +684,7 @@ class BookSearchViewTest(APITestCase):
         self.book2 = Book.objects.create(
             book_name="Test Sport Book",
             book_author="Author 2",
+            book_barcode="123456788",
             book_type="Sport",
             category=self.category2,
             book_rating_avg=3.5,
@@ -695,6 +697,7 @@ class BookSearchViewTest(APITestCase):
         self.book3 = Book.objects.create(
             book_name="Another History Book",
             book_author="Author 3",
+            book_barcode="123456787",
             book_type="History",
             category=self.category1,
             book_rating_avg=5.0,
@@ -705,6 +708,7 @@ class BookSearchViewTest(APITestCase):
         )
 
     def test_search_by_name(self):
+        """Mã Test: UT-BSV-01"""
         """Test searching books by name"""
         url = '/search/?search=History'
         response = self.client.get(url)
@@ -714,6 +718,7 @@ class BookSearchViewTest(APITestCase):
         self.assertEqual(response.data['results'][0]['book_name'], "Test History Book")
 
     def test_filter_by_category(self):
+        """Mã Test: UT-BSV-02"""
         """Test filtering books by category"""
         url = f'/search/?category={self.category2.category_id}'
         response = self.client.get(url)
@@ -723,15 +728,17 @@ class BookSearchViewTest(APITestCase):
         self.assertEqual(response.data['results'][0]['book_name'], "Test Sport Book")
 
     def test_filter_by_rating(self):
+        """Mã Test: UT-BSV-03"""
         """Test filtering books by minimum rating"""
         url = '/search/?min_rating=4'
         response = self.client.get(url)
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data['results']), 1)
-        self.assertEqual(response.data['results'][0]['book_rating_avg'], 4.5)
+        self.assertEqual(float(response.data['results'][0]['book_rating_avg']), 4.5)
 
     def test_sort_by_most_reviewed(self):
+        """Mã Test: UT-BSV-04"""
         """Test sorting books by review count"""
         url = '/search/?sort_by=reviewed'
         response = self.client.get(url)
@@ -742,6 +749,7 @@ class BookSearchViewTest(APITestCase):
                           for i in range(len(results)-1)))
 
     def test_sort_by_favourite(self):
+        """Mã Test: UT-BSV-05"""
         """Test sorting books by favourite count"""
         url = '/search/?sort_by=favourite'
         response = self.client.get(url)
@@ -752,6 +760,7 @@ class BookSearchViewTest(APITestCase):
                           for i in range(len(results)-1)))
 
     def test_sort_by_newest(self):
+        """Mã Test: UT-BSV-06"""
         """Test sorting books by upload date"""
         url = '/search/?sort_by=newest'
         response = self.client.get(url)
@@ -762,6 +771,7 @@ class BookSearchViewTest(APITestCase):
                           for i in range(len(results)-1)))
 
     def test_multiple_filters(self):
+        """Mã Test: UT-BSV-07"""
         """Test combining multiple search filters"""
         url = f'/search/?search=History&category={self.category1.category_id}&min_rating=4'
         response = self.client.get(url)
@@ -771,6 +781,7 @@ class BookSearchViewTest(APITestCase):
         self.assertEqual(response.data['results'][0]['book_name'], "Test History Book")
 
     def test_empty_search(self):
+        """Mã Test: UT-BSV-08"""
         """Test search with no parameters returns all accepted books"""
         url = '/search/'
         response = self.client.get(url)
@@ -779,6 +790,7 @@ class BookSearchViewTest(APITestCase):
         self.assertEqual(len(response.data['results']), 2)  # Only accepted books
 
     def test_pagination(self):
+        """Mã Test: UT-BSV-09"""
         """Test search results pagination"""
         # Create additional books to test pagination
         for i in range(5):
@@ -786,8 +798,10 @@ class BookSearchViewTest(APITestCase):
                 book_name=f"Test Book {i}",
                 book_author=f"Author {i}",
                 book_type="History",
+                book_barcode=f"TEST{i}",
                 category=self.category1,
-                status=Book.Status.ACCEPTED
+                status=Book.Status.ACCEPTED,
+                book_uploaded_date=now()
             )
             
         url = '/search/'
@@ -799,6 +813,7 @@ class BookSearchViewTest(APITestCase):
         self.assertEqual(len(response.data['results']), 4)  # Default page size is 4
 
     def test_multiple_categories(self):
+        """Mã Test: UT-BSV-10"""
         """Test filtering by multiple categories"""
         url = f'/search/?category={self.category1.category_id},{self.category2.category_id}'
         response = self.client.get(url)
@@ -807,11 +822,10 @@ class BookSearchViewTest(APITestCase):
         self.assertEqual(len(response.data['results']), 2)
 
     def test_invalid_rating_filter(self):
+        """Mã Test: UT-BSV-11"""
         """Test invalid rating filter value"""
         url = '/search/?min_rating=invalid'
         response = self.client.get(url)
         
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        # Should ignore invalid rating and return all accepted books
-        self.assertEqual(len(response.data['results']), 2)
-
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data['error'], "Invalid rating filter value")
