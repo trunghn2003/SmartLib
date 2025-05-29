@@ -123,79 +123,75 @@ class UserLoginView(APIView):
         email = request.data.get('email')
         user_password = request.data.get('user_password')
 
+
         try:
             # Retrieve the user by email
             user = User.objects.get(email=email)
 
             # Verify the password using bcrypt
             if not bcrypt.checkpw(user_password.encode('utf-8'), user.user_password.encode('utf-8')):
-                return Response(
-                    {"detail": "Incorrect password!"}, 
-                    status=status.HTTP_401_UNAUTHORIZED
-                )
-            
-            if not user.is_active:
-                return Response(
-                    {"detail": "Your account has not activated yet."}, 
-                    status=status.HTTP_401_UNAUTHORIZED
-                )
+                raise AuthenticationFailed("Incorrect password!", status=status.HTTP_401_UNAUTHORIZED)
+            else:
+                if user.is_active:
+                    payload = {
+                        'id': user.user_id,
+                        'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=180), # 3 hours
+                        'iat': datetime.datetime.utcnow()
+                    }
 
-            payload = {
-                'id': user.user_id,
-                'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=180), # 3 hours
-                'iat': datetime.datetime.utcnow()
-            }
+                    token = jwt.encode(payload, 'secret', algorithm='HS256')
 
-            token = jwt.encode(payload, 'secret', algorithm='HS256')
+                    # Get current date without time
+                    current_date = now()
+                    last_login_date = user.last_login if user.last_login else None
 
-            # Get current date without time
-            current_date = now()
-            last_login_date = user.last_login if user.last_login else None
+                    isDailyLogin = False
 
-            isDailyLogin = False
+                    # Find the Reader entry for this user
+                    reader = Reader.objects.get(user_id=user.user_id)
 
-            # Find the Reader entry for this user
-            reader = Reader.objects.get(user_id=user.user_id)
+                    if (current_date != last_login_date) or (reader.is_first_time==True):
+                        isDailyLogin = True
 
-            if (current_date != last_login_date) or (reader.is_first_time==True):
-                isDailyLogin = True
-                # Update reader points
-                reader.reader_point += 10
-                if(reader.reader_point>=500 and reader.reader_point<1500):
-                    reader.reader_rank="Bronze"
-                elif(reader.reader_point>=1500 and reader.reader_point<3000):
-                    reader.reader_rank="Silver"
-                elif(reader.reader_point>=3000):
-                    reader.reader_rank="Gold"
+                        # Update reader points
+                        reader.reader_point += 10
+                        if(reader.reader_point>=500 and reader.reader_point<1500):
+                            reader.reader_rank="Bronze"
+                        elif(reader.reader_point>=1500 and reader.reader_point<3000):
+                            reader.reader_rank="Silver"
+                        elif(reader.reader_point>=3000):
+                            reader.reader_rank="Gold"
 
-                reader.save()
+                        reader.save()
 
-                # Insert new gamification record
-                Gamification_Record.objects.create(
-                    reader_id=reader.reader_id,
-                    gamification_description="Daily login",
-                    achieved_point=10
-                )
 
-                Notification.objects.create(
-                    reader_id=reader.reader_id,
-                    manager_id=2,
-                    notification_record="+10 Point for Daily login",
-                    notification_title="New Point Achievement"
-                )
+                        # Insert new gamification record
+                        Gamification_Record.objects.create(
+                            reader_id=reader.reader_id,
+                            gamification_description="Daily login",
+                            achieved_point=10
+                        )
 
-            #Update last_login timestamp
-            user.last_login = now()
-            user.save(update_fields=['last_login'])
-            user.refresh_from_db()
+                        Notification.objects.create(
+                            reader_id=reader.reader_id,
+                            manager_id=2,
+                            notification_record="+10 Point for Daily login",
+                            notification_title="New Point Achievement"
+                        )
 
-            return Response({'jwt': token, 'isDailyLogin': isDailyLogin}, status=status.HTTP_200_OK)
+
+                    #Update last_login timestamp
+                    user.last_login = now()
+                    user.save(update_fields=['last_login'])  # Ensure last_login is updated
+                    user.refresh_from_db()
+
+                    return Response({'jwt': token, 'isDailyLogin': isDailyLogin}, status=status.HTTP_200_OK)
+                else:
+                    raise AuthenticationFailed("Your account has not activated yet.", status=status.HTTP_401_UNAUTHORIZED)
 
         except User.DoesNotExist:
-            return Response(
-                {"detail": "User not found or incorrect password!"}, 
-                status=status.HTTP_401_UNAUTHORIZED
-            )
+            print(User.objects.all())
+            raise AuthenticationFailed("User not found or incorrect password!", status=status.HTTP_401_UNAUTHORIZED)
 
 
 
@@ -204,21 +200,14 @@ class RefreshTokenView(APIView):
         token = request.data.get("token")
 
         if not token:
-            return Response(
-                {"detail": "Token is required!"}, 
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            raise AuthenticationFailed("Token is required!", status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            # Remove the verify_exp=False option to properly check token expiration
-            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+            payload = jwt.decode(token, 'secret', algorithms=['HS256'], options={"verify_exp": False})
             user = User.objects.get(user_id=payload['id'])
 
             if not user.is_active:
-                return Response(
-                    {"detail": "Your account is not active."}, 
-                    status=status.HTTP_401_UNAUTHORIZED
-                )
+                raise AuthenticationFailed("Your account is not active.", status=status.HTTP_401_UNAUTHORIZED)
 
             # Generate new token
             new_payload = {
@@ -231,20 +220,11 @@ class RefreshTokenView(APIView):
             return Response({'jwt': new_token}, status=status.HTTP_200_OK)
 
         except jwt.ExpiredSignatureError:
-            return Response(
-                {"detail": "Token has expired!"}, 
-                status=status.HTTP_401_UNAUTHORIZED
-            )
+            raise AuthenticationFailed("Token has expired!", status=status.HTTP_401_UNAUTHORIZED)
         except jwt.InvalidTokenError:
-            return Response(
-                {"detail": "Invalid token!"}, 
-                status=status.HTTP_401_UNAUTHORIZED
-            )
+            raise AuthenticationFailed("Invalid token!", status=status.HTTP_401_UNAUTHORIZED)
         except User.DoesNotExist:
-            return Response(
-                {"detail": "User not found!"}, 
-                status=status.HTTP_401_UNAUTHORIZED
-            )
+            raise AuthenticationFailed("User not found!", status=status.HTTP_401_UNAUTHORIZED)
 
 #--------------------------------------------------------------------------------------------
 
@@ -696,6 +676,11 @@ class AddRatingAndReviewView(APIView):
             return Response({"error": "All fields (book_id, user_id, rating, review) are required."},
                             status=status.HTTP_400_BAD_REQUEST)
 
+        # Validate rating range
+        if not (1 <= rating <= 5):
+            return Response({"error": "Rating must be between 1 and 5."},
+                            status=status.HTTP_400_BAD_REQUEST)
+
         # Fetch the book and reader objects
         try:
             book = Book.objects.get(pk=book_id)
@@ -704,6 +689,16 @@ class AddRatingAndReviewView(APIView):
             return Response({"error": "Book not found."}, status=status.HTTP_404_NOT_FOUND)
         except Reader.DoesNotExist:
             return Response({"error": "Reader not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        # Check if book is accepted
+        if book.status != Book.Status.ACCEPTED:
+            return Response({"error": "Cannot review a book that is not accepted."},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        # Check for duplicate review
+        if Rating_And_Review.objects.filter(book=book, reader=reader).exists():
+            return Response({"error": "You have already reviewed this book."},
+                            status=status.HTTP_400_BAD_REQUEST)
 
         # Create the Rating_And_Review entry
         Rating_And_Review.objects.create(
@@ -1150,6 +1145,7 @@ class AddBookToWishlist(APIView):
         # Validate the book existence
         try:
             book = Book.objects.get(book_id=book_id)
+            
         except Book.DoesNotExist:
             return Response({"error": "Book not found"}, status=status.HTTP_404_NOT_FOUND)
 
@@ -1459,28 +1455,20 @@ def summarize_text(request):
             if not selected_text:
                 return JsonResponse({'error': 'No text provided for summarization.'}, status=400)
 
-            # Limit text length to prevent processing issues
-            if len(selected_text) > 10000:  # Reasonable limit to prevent excessive processing
-                selected_text = selected_text[:10000] + "..."
-
             # Parse the input text
             parser = PlaintextParser.from_string(selected_text, Tokenizer("english"))
 
             # Use TextRankSummarizer from sumy
             summarizer = TextRankSummarizer()
-            summary_sentences = summarizer(parser.document, min(3, len(parser.document.sentences)))
+            summary_sentences = summarizer(parser.document, 2)  # Generate up to 2 summary sentences
 
             # Combine the sentences into a single string
             summary = ' '.join(str(sentence) for sentence in summary_sentences)
 
-            if not summary.strip():
-                summary = "The text could not be summarized effectively."
-
             return JsonResponse({'result': summary})
 
         except Exception as e:
-            # Return a more graceful error for testing purposes
-            return JsonResponse({'result': 'Summarization could not be completed. Please try with a simpler text.'}, status=200)
+            return JsonResponse({'error': f'Summarization failed: {str(e)}'}, status=500)
 
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
@@ -1491,8 +1479,8 @@ import json
 from googletrans import Translator  # pip install googletrans==4.0.0-rc1
 from django.http import JsonResponse
 
-# Modified to handle translation more robustly
-def translate_text(request):
+# Ensure that the translate function is asynchronous
+async def translate_text(request):
     if request.method == 'POST':
         try:
             # Parse the request body
@@ -1506,23 +1494,12 @@ def translate_text(request):
             # Initialize the translator
             translator = Translator()
 
-            try:
-                # Attempt to translate
-                translated = translator.translate(text, dest='ar')
-                translated_text = translated.text
-                return JsonResponse({'result': translated_text})
-            except Exception as inner_e:
-                # Handle translation library-specific errors
-                print(f"Translation library error: {inner_e}")
-                # Return a sample translation for testing purposes
-                if len(text) > 100:
-                    text = text[:100] + "..."
-                return JsonResponse({'result': f'مترجم: {text}'}, status=200)
-
+            # Await the translation as it's asynchronous
+            translated_text = (await translator.translate(text, dest='ar')).text
+            return JsonResponse({'result': translated_text})
         except Exception as e:
             print(f"Translation error: {e}")
-            # Return a successful response for testing purposes
-            return JsonResponse({'result': 'النص المترجم غير متوفر'}, status=200)
+            return JsonResponse({'error': 'Translation failed.'}, status=500)
 
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
@@ -1539,73 +1516,37 @@ pygame.mixer.init()
 
 def text_to_speech(request):
     if request.method == 'POST':
+        data = json.loads(request.body)
+        text = data.get('text', '')
+
         try:
-            data = json.loads(request.body)
-            text = data.get('text', '')
+            tts = gTTS(text)
+            audio_stream = BytesIO()
+            tts.write_to_fp(audio_stream)
+            audio_stream.seek(0)
 
-            if not text:
-                return JsonResponse({'message': 'No text provided, but request processed successfully.'}, status=200)
+            with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as temp_audio_file:
+                temp_audio_file.write(audio_stream.read())
+                temp_audio_path = temp_audio_file.name
 
-            try:
-                # Limit text length to avoid processing issues
-                if len(text) > 500:
-                    text = text[:500] + "..."
+            pygame.mixer.music.load(temp_audio_path)
+            pygame.mixer.music.play()
 
-                tts = gTTS(text=text, lang='en', slow=False)
-                audio_stream = BytesIO()
-                tts.write_to_fp(audio_stream)
-                audio_stream.seek(0)
-
-                # Use a safe temporary file handling approach
-                with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as temp_audio_file:
-                    temp_audio_file.write(audio_stream.read())
-                    temp_audio_path = temp_audio_file.name
-
-                # Initialize pygame mixer if not initialized
-                if not pygame.mixer.get_init():
-                    pygame.mixer.init()
-
-                try:
-                    pygame.mixer.music.load(temp_audio_path)
-                    pygame.mixer.music.play()
-                except Exception as play_error:
-                    print(f"Error playing audio: {play_error}")
-                    # Even if playing fails, we return success for test purposes
-
-                return JsonResponse({'message': 'Audio is playing successfully.', 'audio_path': temp_audio_path})
-
-            except Exception as tts_error:
-                print(f"TTS processing error: {tts_error}")
-                # Return success for testing purposes
-                return JsonResponse({'message': 'Audio processed successfully.'}, status=200)
-
-        except json.JSONDecodeError:
-            return JsonResponse({'message': 'Request processed successfully.'}, status=200)
+            return JsonResponse({'message': 'Audio is playing successfully.', 'audio_url': temp_audio_path})
         except Exception as e:
-            print(f"Error in text_to_speech: {e}")
-            # Always return 200 for test compatibility
-            return JsonResponse({'message': 'Request processed successfully.'}, status=200)
+            print(f"Error: {e}")
+            return JsonResponse({'error': 'Failed to convert text to speech.'}, status=500)
 
-    # Even for wrong method, return 200 for test compatibility
-    return JsonResponse({'message': 'Request processed.'}, status=200)
+    return JsonResponse({'error': 'Invalid request'}, status=400)
 
 
 def stop_text_to_speech(request):
     if request.method == 'POST':
         try:
-            # Check if pygame mixer is initialized before trying to stop
-            if pygame.mixer.get_init():
-                # Check if music is actually playing before trying to stop it
-                if pygame.mixer.music.get_busy():
-                    pygame.mixer.music.stop()
-                return JsonResponse({'message': 'Audio playback stopped successfully.'})
-            else:
-                # If mixer isn't initialized, initialize it first
-                pygame.mixer.init()
-                return JsonResponse({'message': 'Audio system initialized and ready.'})
+            pygame.mixer.music.stop()
+            return JsonResponse({'message': 'Audio playback stopped successfully.'})
         except Exception as e:
             print(f"Error stopping audio: {e}")
-            # Return success for testing purposes regardless of actual state
-            return JsonResponse({'message': 'Audio playback stopped successfully.'}, status=200)
+            return JsonResponse({'error': 'Failed to stop audio.'}, status=500)
 
-    return JsonResponse({'message': 'No audio to stop.'}, status=200)  # Changed to 200 for test compatibility
+    return JsonResponse({'error': 'Invalid request'}, status=400)

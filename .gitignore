@@ -1,1 +1,3 @@
 smartlib_api/__pycache__/*
+myenv/*
+smartlib_api/migrations/__pycache__/*
